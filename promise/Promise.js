@@ -108,6 +108,21 @@ define([
     },
 
     /**
+     * promise.Promise#call(name[, args]) -> promise.Promise
+     * - name (String | Number): Name of method to invoke
+     * - args (?): Subsequent arguments are passed to the method invocation.
+     *
+     * Invokes a method on the fulfilled promise value. Returns a promise
+     * for the return value.
+     **/
+    call: function(name){
+      var args = slice.call(arguments, 1);
+      return this.then(function(result){
+        return result[name].apply(result, args);
+      });
+    },
+
+    /**
      * promise.Promise#put(name, value) -> promise.Promise
      * - name (String | Number): Name of property to set
      * - value (?): New value of property
@@ -122,17 +137,15 @@ define([
     },
 
     /**
-     * promise.Promise#call(name[, args]) -> promise.Promise
-     * - name (String | Number): Name of method to invoke
-     * - args (?): Subsequent arguments are passed to the method invocation.
+     * promise.Promise#change(value) -> promise.Promise
+     * - value (?): Value of returned promise
      *
-     * Invokes a method on the fulfilled promise value. Returns a promise
-     * for the return value.
+     * Returns a new promise that'll be resolved with the new value, but not
+     * until the promise has been fulfilled.
      **/
-    call: function(name){
-      var args = slice.call(arguments, 1);
-      return this.then(function(result){
-        return result[name].apply(result, args);
+    change: function(value){
+      return this.then(function(){
+        return value;
       });
     }
   });

@@ -71,34 +71,6 @@ define([
       }
     },
 
-    "put()": {
-      "with result": function(){
-        var obj = {};
-        this.deferred.promise.put("foo", "bar").then(function(result){
-          assert.same(result, "bar");
-          assert.same(obj.foo, "bar");
-        });
-        this.deferred.resolve(obj);
-        assert.ran(this.count + 2);
-      },
-
-      "with undefined result": function(){
-        this.deferred.promise.put("foo", "bar").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
-        });
-        this.deferred.resolve();
-        assert.ran(this.count + 1);
-      },
-
-      "with null result": function(){
-        this.deferred.promise.put("foo", "bar").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
-        });
-        this.deferred.resolve(null);
-        assert.ran(this.count + 1);
-      }
-    },
-
     "call()": {
       "with result": function(){
         var obj = { foo: function(){ return "bar"; }};
@@ -146,6 +118,43 @@ define([
         this.deferred.resolve(null);
         assert.ran(this.count + 1);
       }
+    },
+
+    "put()": {
+      "with result": function(){
+        var obj = {};
+        this.deferred.promise.put("foo", "bar").then(function(result){
+          assert.same(result, "bar");
+          assert.same(obj.foo, "bar");
+        });
+        this.deferred.resolve(obj);
+        assert.ran(this.count + 2);
+      },
+
+      "with undefined result": function(){
+        this.deferred.promise.put("foo", "bar").then(null, function(result){
+          assert.isInstance(result, TypeError, "TypeError");
+        });
+        this.deferred.resolve();
+        assert.ran(this.count + 1);
+      },
+
+      "with null result": function(){
+        this.deferred.promise.put("foo", "bar").then(null, function(result){
+          assert.isInstance(result, TypeError, "TypeError");
+        });
+        this.deferred.resolve(null);
+        assert.ran(this.count + 1);
+      }
+    },
+
+    "change()": function(){
+      var obj1 = {}, obj2 = {};
+      this.deferred.promise.change(obj2).then(function(result){
+        assert.same(result, obj2);
+      });
+      this.deferred.resolve(obj1);
+      assert.ran(this.count + 1);
     }
   });
 });
