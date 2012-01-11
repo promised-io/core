@@ -1,0 +1,15 @@
+{
+  "name": "promised-io",
+  "version": "0.3.0",
+  "dependencies": {
+    "amdefine": "0.0.1",
+    "compose": "https://github.com/kriszyp/compose/tarball/c14ea660c0b892e31200f0170d9c2e93b8bf1e8f"
+  },
+  "devDependencies": {
+    "buster": "0.3.0"
+  },
+  "directories": {
+    "lib": ".",
+    "doc": "./doc"
+  }
+}
