@@ -1,6 +1,6 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
-define(["../errors"], function(errors){
+define(["../promise"], function(errors){
   /**
    * promise.timeout(promiseLike, ms = 0) -> promiseLike
    * - ms (Number): How long to wait until the promise is cancelled.

@@ -4,7 +4,7 @@ define([
   "buster",
   "../../promise/defer",
   "../../promise/timeout",
-  "../../errors"
+  "../../promise"
 ], function(buster, defer, timeout, errors){
   buster.testCase("promise/timeout", {
     setUp: function(){
@@ -16,7 +16,7 @@ define([
 
     "on a deferred instance": function(done){
       this.canceler = function(reason){
-        assert.isInstance(reason, errors.TimeoutError, "errors.TimeoutError");
+        assert.isInstance(reason, errors.TimeoutError, "promise.TimeoutError");
         done();
       };
       var returnValue = this.deferred.timeout(0);
@@ -25,7 +25,7 @@ define([
 
     "with a deferred": function(done){
       this.canceler = function(reason){
-        assert.isInstance(reason, errors.TimeoutError, "errors.TimeoutError");
+        assert.isInstance(reason, errors.TimeoutError, "promise.TimeoutError");
         done();
       };
       var returnValue = timeout(this.deferred, 0);
@@ -34,7 +34,7 @@ define([
 
     "with a promise": function(done){
       this.canceler = function(reason){
-        assert.isInstance(reason, errors.TimeoutError, "errors.TimeoutError");
+        assert.isInstance(reason, errors.TimeoutError, "promise.TimeoutError");
         done();
       };
       var returnValue = timeout(this.deferred.promise, 0);
@@ -63,7 +63,7 @@ define([
       var foreign = {
         then: function(){},
         cancel: function(reason){
-          assert.isInstance(reason, errors.TimeoutError, "errors.TimeoutError");
+          assert.isInstance(reason, errors.TimeoutError, "promise.TimeoutError");
           done();
         }
       };

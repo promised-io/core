@@ -8,7 +8,7 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 define([
   "compose",
   "../lib/adapters!lang",
-  "../errors",
+  "../promise",
   "./Promise",
   "./isPromise",
   "./timeout"

@@ -5,7 +5,7 @@ define([
   "../../promise/defer",
   "../../promise/Promise",
   "../../promise/Deferred",
-  "../../errors"
+  "../../promise"
 ], function(buster, defer, Promise, Deferred, errors){
   buster.testCase("promise/Deferred", {
     setUp: function(){
@@ -297,7 +297,7 @@ define([
 
       "without reason results in CancelError": function(){
         var reason = this.deferred.cancel();
-        assert.isInstance(reason, errors.CancelError, "errors.CancelError");
+        assert.isInstance(reason, errors.CancelError, "promise.CancelError");
         this.deferred.then(null, function(result){
           assert.same(result, reason);
         });
@@ -325,7 +325,7 @@ define([
       "with undefined reason returned from canceler results in CancelError": function(){
         this.canceler = function(){ return undefined; };
         var reason = this.deferred.cancel();
-        assert.isInstance(reason, errors.CancelError, "errors.CancelError");
+        assert.isInstance(reason, errors.CancelError, "promise.CancelError");
         this.deferred.then(null, function(result){
           assert.same(result, reason);
         });
@@ -378,7 +378,7 @@ define([
 
       "is already bound to the deferred": function(){
         this.deferred.then(null, function(result){
-          assert.isInstance(result, errors.CancelError, "errors.CancelError");
+          assert.isInstance(result, errors.CancelError, "promise.CancelError");
         });
         var cancel = this.deferred.cancel;
         cancel();
