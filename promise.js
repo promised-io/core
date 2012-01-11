@@ -3,10 +3,10 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 /**
  * promise
  **/
- define([
-   "exports",
-   "./lib/errorFactory"
- ], function(exports, errorFactory){
+define([
+  "exports",
+  "./lib/errorFactory"
+], function(exports, errorFactory){
   /**
    * class promise.CancelError
    *
