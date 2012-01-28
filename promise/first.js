@@ -23,8 +23,6 @@ define([
       lang.forIn(objectOrArray, function(valueOrPromise){
         array.push(valueOrPromise);
       });
-    }else{
-      throw new TypeError;
     }
 
     if(!array || !array.length){

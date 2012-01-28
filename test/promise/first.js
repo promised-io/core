@@ -30,15 +30,17 @@ define([
     },
 
     "without arguments": function(){
-      assert.exception(function(){
-        first();
-      }, "TypeError");
+      first().then(function(result){
+        assert.same(arguments.length, 1);
+        refute.defined(result);
+      });
     },
 
     "with single non-object argument": function(){
-      assert.exception(function(){
-        first();
-      }, "TypeError");
+      first(null).then(function(result){
+        assert.same(arguments.length, 1);
+        refute.defined(result);
+      });
     },
 
     "with empty array": function(){

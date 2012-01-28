@@ -23,8 +23,6 @@ define([
       array = objectOrArray;
     }else if(objectOrArray && typeof objectOrArray === "object"){
       object = objectOrArray;
-    }else{
-      throw new TypeError;
     }
 
     var results;
