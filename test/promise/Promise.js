@@ -71,10 +71,10 @@ define([
       }
     },
 
-    "call()": {
+    "invoke()": {
       "with result": function(){
         var obj = { foo: function(){ return "bar"; }};
-        this.deferred.promise.call("foo").then(function(result){
+        this.deferred.promise.invoke("foo").then(function(result){
           assert.same(result, "bar");
         });
         this.deferred.resolve(obj);
@@ -85,7 +85,7 @@ define([
         var obj = { foo: function(){
           return defer().resolve("bar");
         }};
-        this.deferred.promise.call("foo").then(function(result){
+        this.deferred.promise.invoke("foo").then(function(result){
           assert.same(result, "bar");
         });
         this.deferred.resolve(obj);
@@ -96,7 +96,7 @@ define([
         var obj = { foo: function(){
           throw "fail";
         }};
-        this.deferred.promise.call("foo").then(null, function(result){
+        this.deferred.promise.invoke("foo").then(null, function(result){
           assert.same(result, "fail");
         });
         this.deferred.resolve(obj);
@@ -104,7 +104,7 @@ define([
       },
 
       "with undefined result": function(){
-        this.deferred.promise.call("foo").then(null, function(result){
+        this.deferred.promise.invoke("foo").then(null, function(result){
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve();
@@ -112,11 +112,21 @@ define([
       },
 
       "with null result": function(){
-        this.deferred.promise.call("foo").then(null, function(result){
+        this.deferred.promise.invoke("foo").then(null, function(result){
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve(null);
         assert.ran(this.count + 1);
+      },
+
+      "passing arguments": function(){
+        var obj = {};
+        this.deferred.promise.invoke("foo", [obj]);
+        this.deferred.resolve({
+          foo: function(arg){
+            assert.same(arg, obj);
+          }
+        });
       }
     },
 

@@ -116,15 +116,22 @@ define([
     },
 
     /**
-     * promise.Promise#call(name[, args]) -> promise.Promise
+     * promise.Promise#invoke(name[, args]) -> promise.Promise
      * - name (String | Number): Name of method to invoke
-     * - args (?): Subsequent arguments are passed to the method invocation.
+     * - args (Array): Subsequent arguments are passed to the method.
      *
      * Invokes a method on the fulfilled promise value. Returns a promise
      * for the return value.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.invoke("foo", [42]).then(console.log);
+     *     deferred.resolve({ foo: function(v){ return v; } });
+     *     // Logs 42
+     *
      **/
-    call: function(name){
-      var args = slice.call(arguments, 1);
+    invoke: function(name, args){
       return this.then(function(result){
         return result[name].apply(result, args);
       });
