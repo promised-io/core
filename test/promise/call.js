@@ -37,6 +37,19 @@ define([
       }, function(result){
         assert.same(result, obj);
       });
+    },
+
+    "with thisObject": function(){
+      var obj = {};
+      call(function(){ assert.same(this, obj); }, obj);
+    },
+
+    "passing arguments": function(){
+      var obj1 = {}, obj2 = {};
+      call(function(arg1, arg2){
+        assert.same(arg1, obj1);
+        assert.same(arg2, obj2);
+      }, null, obj1, obj2);
     }
   });
 });
