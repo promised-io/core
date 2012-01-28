@@ -165,6 +165,119 @@ define([
       });
       this.deferred.resolve(obj1);
       assert.ran(this.count + 1);
+    },
+
+    "inflect()": {
+      "resolved promise": function(){
+        var obj = {};
+        this.deferred.promise.inflect(function(error, result){
+          assert.same(error, null);
+          assert.same(result, obj);
+        });
+        this.deferred.resolve(obj);
+      },
+
+      "rejected promise": function(){
+        var obj = {};
+        this.deferred.promise.inflect(function(error){
+          assert.same(arguments.length, 1);
+          assert.same(error, obj);
+        });
+        this.deferred.reject(obj);
+      }
+    },
+
+    "del()": {
+      "with result": function(){
+        var obj = { foo: "bar" };
+        this.deferred.promise.del("foo").then(function(result){
+          assert(result);
+          refute.defined(obj.foo);
+        });
+        this.deferred.resolve(obj);
+      },
+
+      "with undefined result": function(){
+        this.deferred.promise.del("foo").then(null, function(result){
+          assert.isInstance(result, TypeError, "TypeError");
+        });
+        this.deferred.resolve();
+      },
+
+      "with null result": function(){
+        this.deferred.promise.del("foo").then(null, function(result){
+          assert.isInstance(result, TypeError, "TypeError");
+        });
+        this.deferred.resolve(null);
+      }
+    },
+
+    "call()": {
+      "normally": function(){
+        this.deferred.promise.call();
+        this.deferred.resolve(function(){
+          assert(true);
+        });
+      },
+
+      "with thisObject": function(){
+        var obj = {};
+        this.deferred.promise.call(obj);
+        this.deferred.resolve(function(){
+          assert.same(this, obj);
+        });
+      },
+
+      "with arguments": function(){
+        var obj1 = {}, obj2 = {};
+        this.deferred.promise.call(null, obj1, obj2);
+        this.deferred.resolve(function(arg1, arg2){
+          assert.same(arg1, obj1);
+          assert.same(arg2, obj2);
+        });
+      },
+
+      "non-callable": function(){
+        var obj1 = {}, obj2 = {};
+        this.deferred.promise.call().then(null, function(result){
+          assert.isInstance(result, TypeError, "TypeError");
+        });
+        this.deferred.resolve();
+      }
+    },
+
+    "apply()": {
+      "normally": function(){
+        this.deferred.promise.apply();
+        this.deferred.resolve(function(){
+          assert(true);
+        });
+      },
+
+      "with thisObject": function(){
+        var obj = {};
+        this.deferred.promise.apply(obj);
+        this.deferred.resolve(function(){
+          assert.same(this, obj);
+        });
+      },
+
+      "with arguments": function(){
+        var obj1 = {}, obj2 = {};
+        this.deferred.promise.apply(null, [obj1, obj2]);
+        this.deferred.resolve(function(arg1, arg2){
+          assert.same(arg1, obj1);
+          assert.same(arg2, obj2);
+        });
+      },
+
+      "non-callable": function(){
+        var obj1 = {}, obj2 = {};
+        this.deferred.promise.apply().then(null, function(result){
+          assert.isInstance(result, TypeError, "TypeError");
+        });
+        this.deferred.resolve();
+      }
     }
   });
 });

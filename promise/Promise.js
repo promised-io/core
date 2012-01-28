@@ -11,7 +11,7 @@ define([
   function throwAbstract(){
     throw new TypeError("abstract");
   }
-  var slice = Array.prototype.slice;
+  var slice = [].slice;
 
   return Compose({
     /**
@@ -96,6 +96,20 @@ define([
     },
 
     /**
+     * promise.Promise#inflect(callback) -> promise.Promise
+     * - callback (Function): function(error, value){ … }
+     *
+     * Support appending a Node-style callback to the promise. The rejection
+     * value will be passed as the first argument to `callback`, the resolve
+     * value as the second.
+     **/
+    inflect: function(callback){
+      return this.then(
+          function(result){ return callback(null, result); },
+          callback);
+    },
+
+    /**
      * promise.Promise#get(name) -> promise.Promise
      * - name (String | Number): Name of property to get
      *
@@ -161,6 +175,27 @@ define([
     },
 
     /**
+     * promise.Promise#del(name) -> promise.Promise
+     * - name (String): Name of property to delete
+     *
+     * Delete the value of a property on the fulfilled promise value. Returns
+     * a promise for the delete operation.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.del("foo").then(console.log);
+     *     deferred.resolve({ foo: "bar" });
+     *     // Logs true
+     *
+     **/
+    del: function(name){
+      return this.then(function(result){
+        return delete result[name];
+      });
+    },
+
+    /**
      * promise.Promise#change(value) -> promise.Promise
      * - value (?): Value of returned promise
      *
@@ -178,6 +213,51 @@ define([
     change: function(value){
       return this.then(function(){
         return value;
+      });
+    },
+
+    /**
+     * promise.Promise#call(thisObject[, args]) -> promise.Promise
+     * - thisObject (?)
+     * - args (?): Subsequent arguments are passed to the method.
+     *
+     * Invoke the fulfilled promise value. Returns a promise for the invocation
+     * result.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.call(null, 42).then(console.log);
+     *     deferred.resolve(function(v){ return v; });
+     *     // Logs 42
+     *
+     **/
+    call: function(thisObject){
+      var args = slice.call(arguments, 1);
+      return this.then(function(func){
+        return func.apply(thisObject, args);
+      });
+    },
+
+    /**
+     * promise.Promise#apply(thisObject[, args]) -> promise.Promise
+     * - thisObject (?)
+     * - args (Array): Subsequent arguments are passed to the method.
+     *
+     * Invoke the fulfilled promise value. Returns a promise for the invocation
+     * result.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.apply(null, [42]).then(console.log);
+     *     deferred.resolve(function(v){ return v; });
+     *     // Logs 42
+     *
+     **/
+    apply: function(thisObject, args){
+      return this.then(function(func){
+        return func.apply(thisObject, args);
       });
     }
   });
