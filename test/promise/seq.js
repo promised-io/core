@@ -8,7 +8,6 @@ define([
   buster.testCase("promise/seq", {
     setUp: function(){
       this.deferred = defer();
-      this.count = buster.assertions.count;
     },
 
     "with an empty array": function(){
@@ -16,7 +15,6 @@ define([
       seq([], obj).then(function(result){
         assert.same(result, obj);
       });
-      assert.ran(this.count + 1);
     },
 
     "fibonacci": function(){
@@ -29,7 +27,6 @@ define([
       seq([calculate, calculate, calculate, calculate], 1).then(function(result){
         assert.same(result, 5);
       });
-      assert.ran(this.count + 1);
     },
 
     "fibonacci, asynchronous": function(){

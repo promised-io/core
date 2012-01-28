@@ -8,7 +8,6 @@ define([
   buster.testCase("promise/asap", {
     setUp: function(){
       this.deferred = defer();
-      this.count = buster.assertions.count;
     },
 
     "returns the value without callbacks": function(){

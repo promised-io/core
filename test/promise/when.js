@@ -10,7 +10,6 @@ define([
   buster.testCase("promise/when", {
     setUp: function(){
       this.deferred = defer();
-      this.count = buster.assertions.count;
     },
 
     "returns the same promise without callbacks": function(){
@@ -35,7 +34,6 @@ define([
         assert.same(result, obj);
       });
       this.deferred.resolve(obj);
-      assert.ran(this.count + 1);
     },
 
     "with a promise that gets rejected": function(){
@@ -44,7 +42,6 @@ define([
         assert.same(result, obj);
       });
       this.deferred.reject(obj);
-      assert.ran(this.count + 1);
     },
 
     "with a promise that gets progress": function(){
@@ -53,7 +50,6 @@ define([
         assert.same(result, obj);
       });
       this.deferred.progress(obj);
-      assert.ran(this.count + 1);
     },
 
     "with chaining of the result": function(){
@@ -62,21 +58,19 @@ define([
       when(2, square).then(square).then(function(n){
         assert.same(n, 16);
       });
-      assert.ran(this.count + 1);
     },
 
     "converts foreign promises": function(){
       var _callback;
       var foreign = { then: function(cb){ _callback = cb; } };
       var promise = when(foreign);
-      assert.isInstance(promise, Promise, "promise.Promise");
 
       var obj = {};
       promise.then(function(result){
+        assert.isInstance(promise, Promise, "promise.Promise");
         assert.same(result, obj);
       });
       _callback(obj);
-      assert.ran(this.count + 2);
     }
   });
 });

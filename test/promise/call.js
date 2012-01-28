@@ -6,10 +6,6 @@ define([
   "../../promise/defer"
 ], function(buster, call, defer){
   buster.testCase("promise/call", {
-    setUp: function(){
-      this.count = buster.assertions.count;
-    },
-
     "returning value": function(){
       var obj = {};
       return call(function(){ return obj; }).then(function(result){

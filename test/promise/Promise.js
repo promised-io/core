@@ -7,42 +7,44 @@ define([
   buster.testCase("promise/Promise", {
     setUp: function(){
       this.deferred = defer();
-      this.count = buster.assertions.count;
     },
 
     "fail(…) is equivalent to then(null, …)": function(){
       var obj = {};
+      var thenResult;
       this.deferred.then(null, function(result){
-        assert.same(result, obj);
+        thenResult = result;
       });
       this.deferred.promise.fail(function(result){
         assert.same(result, obj);
+        assert.same(result, thenResult);
       });
       this.deferred.reject(obj);
-      assert.ran(this.count + 2);
     },
 
     "both() will be invoked for resolution and rejection": function(){
       var obj = {};
       var deferred1 = defer();
+      var thenResult;
       deferred1.promise.then(function(result){
-        assert.same(result, obj);
+        thenResult = result;
       });
       deferred1.promise.both(function(result){
         assert.same(result, obj);
+        assert.same(result, thenResult);
       });
       deferred1.resolve(obj);
 
       var deferred2 = defer();
+      var thenResult2;
       deferred2.promise.then(null, function(result){
-        assert.same(result, obj);
+        thenResult2 = result;
       });
       deferred2.promise.both(function(result){
         assert.same(result, obj);
+        assert.same(result, thenResult2);
       });
       deferred2.reject(obj);
-
-      assert.ran(this.count + 4);
     },
 
     "get()": {
@@ -51,7 +53,6 @@ define([
           assert.same(result, "bar");
         });
         this.deferred.resolve({ foo: "bar" });
-        assert.ran(this.count + 1);
       },
 
       "with undefined result": function(){
@@ -59,7 +60,6 @@ define([
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve();
-        assert.ran(this.count + 1);
       },
 
       "with null result": function(){
@@ -67,7 +67,6 @@ define([
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve(null);
-        assert.ran(this.count + 1);
       }
     },
 
@@ -78,7 +77,6 @@ define([
           assert.same(result, "bar");
         });
         this.deferred.resolve(obj);
-        assert.ran(this.count + 1);
       },
 
       "with result, returning promise": function(){
@@ -89,7 +87,6 @@ define([
           assert.same(result, "bar");
         });
         this.deferred.resolve(obj);
-        assert.ran(this.count + 1);
       },
 
       "with result, throwing error": function(){
@@ -100,7 +97,6 @@ define([
           assert.same(result, "fail");
         });
         this.deferred.resolve(obj);
-        assert.ran(this.count + 1);
       },
 
       "with undefined result": function(){
@@ -108,7 +104,6 @@ define([
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve();
-        assert.ran(this.count + 1);
       },
 
       "with null result": function(){
@@ -116,7 +111,6 @@ define([
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve(null);
-        assert.ran(this.count + 1);
       },
 
       "passing arguments": function(){
@@ -138,7 +132,6 @@ define([
           assert.same(obj.foo, "bar");
         });
         this.deferred.resolve(obj);
-        assert.ran(this.count + 2);
       },
 
       "with undefined result": function(){
@@ -146,7 +139,6 @@ define([
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve();
-        assert.ran(this.count + 1);
       },
 
       "with null result": function(){
@@ -154,7 +146,6 @@ define([
           assert.isInstance(result, TypeError, "TypeError");
         });
         this.deferred.resolve(null);
-        assert.ran(this.count + 1);
       }
     },
 
@@ -164,7 +155,6 @@ define([
         assert.same(result, obj2);
       });
       this.deferred.resolve(obj1);
-      assert.ran(this.count + 1);
     },
 
     "inflect()": {

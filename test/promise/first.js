@@ -8,7 +8,6 @@ define([
   buster.testCase("promise/first", {
     setUp: function(){
       this.deferred = defer();
-      this.count = buster.assertions.count;
     },
 
     "with array argument": function(){
@@ -17,7 +16,6 @@ define([
         assert.same(result, obj);
       });
       this.deferred.resolve({});
-      assert.ran(this.count + 1);
     },
 
     "with object argument": function(){
@@ -26,7 +24,6 @@ define([
         assert.same(result, obj);
       });
       this.deferred.resolve({});
-      assert.ran(this.count + 1);
     },
 
     "without arguments": function(){
@@ -47,14 +44,12 @@ define([
       first([]).then(function(result){
         refute.defined(result);
       });
-      assert.ran(this.count + 1);
     },
 
     "with empty object": function(){
       first({}).then(function(result){
         refute.defined(result);
       });
-      assert.ran(this.count + 1);
     },
 
     "with one rejected promise": function(){
@@ -62,7 +57,6 @@ define([
       first([this.deferred, defer().reject(obj), {}]).then(null, function(result){
         assert.same(result, obj);
       });
-      assert.ran(this.count + 1);
     },
 
     "with one promise rejected later": function(){
@@ -71,7 +65,6 @@ define([
         assert.same(result, obj);
       });
       this.deferred.reject(obj);
-      assert.ran(this.count + 1);
     },
 
     "with multiple promises rejected later": function(){
@@ -82,7 +75,6 @@ define([
       });
       this.deferred.reject(obj);
       deferred2.reject({});
-      assert.ran(this.count + 1);
     },
 
     "cancel only affects returned promise, not those we're waiting for": function(){
@@ -94,7 +86,6 @@ define([
         assert.same(result, obj);
       });
       promise.cancel(obj);
-      assert.ran(this.count + 1);
     }
   });
 });

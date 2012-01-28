@@ -11,7 +11,6 @@ define([
       var self = this;
       this.canceler = function(reason){};
       this.deferred = defer(function(reason){ return self.canceler(reason); });
-      this.count = buster.assertions.count;
     },
 
     "on a deferred instance": function(done){

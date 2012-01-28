@@ -10,20 +10,23 @@ define([
   buster.testCase("promise/Deferred", {
     setUp: function(){
       this.deferred = defer();
-      this.count = buster.assertions.count;
     },
 
     "resolve": {
-      "deferred and promise receive same results": function(){
+      "deferred receives result": function(){
         var obj = {};
-        this.deferred.promise.then(function(result){
-          assert.same(result, obj);
-        });
         this.deferred.then(function(result){
           assert.same(result, obj);
         });
         this.deferred.resolve(obj);
-        assert.ran(this.count + 2);
+      },
+
+      "promise receives result": function(){
+        var obj = {};
+        this.deferred.promise.then(function(result){
+          assert.same(result, obj);
+        });
+        this.deferred.resolve(obj);
       },
 
       "returns promise": function(){
@@ -31,10 +34,6 @@ define([
         var returnedPromise = this.deferred.resolve(obj);
         assert.isInstance(returnedPromise, Promise, "promise.Promise");
         assert.same(returnedPromise, this.deferred.promise);
-        returnedPromise.then(function(result){
-          assert.same(result, obj);
-        });
-        assert.ran(this.count + 3);
       },
 
       "and isResolved() returns true": function(){
@@ -71,7 +70,6 @@ define([
         this.deferred.then(function(result){
           assert.same(result, obj);
         });
-        assert.ran(this.count + 1);
       },
 
       "is already bound to the deferred": function(){
@@ -81,21 +79,24 @@ define([
         });
         var resolve = this.deferred.resolve;
         resolve(obj);
-        assert.ran(this.count + 1);
       }
     },
 
     "reject": {
-      "deferred and promise receive same results": function(){
+      "deferred receives result": function(){
         var obj = {};
-        this.deferred.promise.then(null, function(result){
-          assert.same(result, obj);
-        });
         this.deferred.then(null, function(result){
           assert.same(result, obj);
         });
         this.deferred.reject(obj);
-        assert.ran(this.count + 2);
+      },
+
+      "promise receives result": function(){
+        var obj = {};
+        this.deferred.promise.then(null, function(result){
+          assert.same(result, obj);
+        });
+        this.deferred.reject(obj);
       },
 
       "returns promise": function(){
@@ -103,10 +104,6 @@ define([
         var returnedPromise = this.deferred.reject(obj);
         assert.isInstance(returnedPromise, Promise, "promise.Promise");
         assert.same(returnedPromise, this.deferred.promise);
-        returnedPromise.then(null, function(result){
-          assert.same(result, obj);
-        });
-        assert.ran(this.count + 3);
       },
 
       "and isRejected() returns true": function(){
@@ -143,7 +140,6 @@ define([
         this.deferred.then(null, function(result){
           assert.same(result, obj);
         });
-        assert.ran(this.count + 1);
       },
 
       "is already bound to the deferred": function(){
@@ -153,21 +149,24 @@ define([
         });
         var reject = this.deferred.reject;
         reject(obj);
-        assert.ran(this.count + 1);
       }
     },
 
     "progress": {
-      "deferred and promise receive same results": function(){
+      "deferred receives result": function(){
         var obj = {};
-        this.deferred.promise.then(null, null, function(result){
-          assert.same(result, obj);
-        });
         this.deferred.then(null, null, function(result){
           assert.same(result, obj);
         });
         this.deferred.progress(obj);
-        assert.ran(this.count + 2);
+      },
+
+      "promise receives result": function(){
+        var obj = {};
+        this.deferred.promise.then(null, null, function(result){
+          assert.same(result, obj);
+        });
+        this.deferred.progress(obj);
       },
 
       "returns promise": function(){
@@ -218,7 +217,6 @@ define([
           assert.same(result, obj2);
         });
         this.deferred.progress(obj2);
-        assert.ran(this.count + 1);
       },
 
       "with chaining": function(){
@@ -229,7 +227,6 @@ define([
         });
         this.deferred.resolve();
         inner.progress(obj);
-        assert.ran(this.count + 1);
       },
 
       "is already bound to the deferred": function(){
@@ -239,7 +236,6 @@ define([
         });
         var progress = this.deferred.progress;
         progress(obj);
-        assert.ran(this.count + 1);
       }
     },
 
@@ -253,7 +249,6 @@ define([
       "invokes a canceler": function(){
         this.canceler = function(){ assert(true); };
         this.deferred.cancel();
-        assert.ran(this.count + 1);
       },
 
       "and isCanceled() returns true": function(){
@@ -281,10 +276,11 @@ define([
       },
 
       "is ignored after having been fulfilled": function(){
-        this.canceler = function(){ assert.fail("Canceler shouldn't be invoked, cancel should be ignored"); };
+        var canceled = false;
+        this.canceler = function(){ canceler = true; };
         this.deferred.resolve();
         this.deferred.cancel();
-        assert.ran(this.count);
+        refute(canceled);
       },
 
       "throws error after having been fulfilled and strict": function(){
@@ -297,39 +293,44 @@ define([
 
       "without reason results in CancelError": function(){
         var reason = this.deferred.cancel();
-        assert.isInstance(reason, errors.CancelError, "promise.CancelError");
         this.deferred.then(null, function(result){
           assert.same(result, reason);
         });
-        assert.ran(this.count + 2);
+      },
+
+      "returns default reason": function(){
+        var reason = this.deferred.cancel();
+        assert.isInstance(reason, errors.CancelError, "promise.CancelError");
       },
 
       "passing reason to canceler": function(){
         var obj = {};
         this.canceler = function(reason){ assert.same(reason, obj); };
         this.deferred.cancel(obj);
-        assert.ran(this.count + 1);
       },
 
       "with reason returned from canceler": function(){
         var obj = {};
         this.canceler = function(){ return obj; };
         var reason = this.deferred.cancel();
-        assert.same(reason, obj);
         this.deferred.then(null, function(reason){
           assert.same(reason, obj);
         });
-        assert.ran(this.count + 2);
+      },
+
+      "returns reason from canceler": function(){
+        var obj = {};
+        this.canceler = function(){ return obj; };
+        var reason = this.deferred.cancel();
+        assert.same(reason, obj);
       },
 
       "with undefined reason returned from canceler results in CancelError": function(){
         this.canceler = function(){ return undefined; };
         var reason = this.deferred.cancel();
-        assert.isInstance(reason, errors.CancelError, "promise.CancelError");
         this.deferred.then(null, function(result){
           assert.same(result, reason);
         });
-        assert.ran(this.count + 2);
       },
 
       "with canceler resolving deferred": function(){
@@ -374,7 +375,6 @@ define([
           assert.same(reason, obj);
         };
         this.deferred.then().then().then().cancel(obj);
-        assert.ran(this.count + 1);
       },
 
       "a returned promise": function(){
@@ -385,7 +385,6 @@ define([
         });
         this.deferred.resolve();
         chain.cancel(obj, true);
-        assert.ran(this.count + 1);
       },
 
       "is already bound to the deferred": function(){
@@ -394,7 +393,6 @@ define([
         });
         var cancel = this.deferred.cancel;
         cancel();
-        assert.ran(this.count + 1);
       }
     },
 
@@ -406,10 +404,6 @@ define([
           assert.same(n, 16);
         });
         this.deferred.resolve(2);
-        this.deferred.then(function(n){
-          assert.same(n, 2);
-        });
-        assert.ran(this.count + 2);
       },
 
       "chained asynchronously": function(){
@@ -423,14 +417,7 @@ define([
           assert.same(n, 16);
         });
         this.deferred.resolve(2);
-        this.deferred.then(function(n){
-          assert.same(n, 2);
-        });
-
-        var self = this;
-        return result.then(function(){
-          assert.ran(self.count + 2);
-        });
+        return result;
       },
 
       "is already bound to the deferred": function(){
@@ -440,7 +427,6 @@ define([
           assert.same(result, obj);
         });
         this.deferred.resolve(obj);
-        assert.ran(this.count + 1);
       }
     },
 
@@ -451,7 +437,6 @@ define([
           assert.same(result, obj);
         });
         this.deferred.resolverCallback(function(){ return obj; })();
-        assert.ran(this.count + 1);
       },
 
       "catches exceptions and rejects": function(){
@@ -460,7 +445,6 @@ define([
           assert.same(result, obj);
         });
         this.deferred.resolverCallback(function(){ throw obj; })();
-        assert.ran(this.count + 1);
       },
 
       "is ignored if already fulfilled": function(){
@@ -475,7 +459,6 @@ define([
         });
         var deferred = this.deferred;
         this.deferred.resolverCallback(function(){ deferred.resolve(obj1); return obj2; })();
-        assert.ran(this.count + 1);
       }
     }
   });
