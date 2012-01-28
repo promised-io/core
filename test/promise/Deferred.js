@@ -336,24 +336,36 @@ define([
         var deferred = this.deferred;
         var obj = {};
         this.canceler = function(){ deferred.resolve(obj); };
-        var result = this.deferred.cancel();
-        assert.same(result, obj);
+        this.deferred.cancel();
         this.deferred.then(function(result){
           assert.same(result, obj);
         });
-        assert.ran(this.count + 2);
+      },
+
+      "with canceler resolving deferred, returns undefined": function(){
+        var deferred = this.deferred;
+        var obj = {};
+        this.canceler = function(){ deferred.resolve(obj); };
+        var result = this.deferred.cancel();
+        refute.defined(result);
       },
 
       "with canceler rejecting deferred": function(){
         var deferred = this.deferred;
         var obj = {};
         this.canceler = function(){ deferred.reject(obj); };
-        var result = this.deferred.cancel();
-        assert.same(result, obj);
+        this.deferred.cancel();
         this.deferred.then(null, function(result){
           assert.same(result, obj);
         });
-        assert.ran(this.count + 2);
+      },
+
+      "with canceler rejecting deferred, returns undefined": function(){
+        var deferred = this.deferred;
+        var obj = {};
+        this.canceler = function(){ deferred.reject(obj); };
+        var result = this.deferred.cancel();
+        refute.defined(result);
       },
 
       "a promise chain": function(){

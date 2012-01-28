@@ -156,8 +156,8 @@ define([
      * Signal the deferred that we're no longer interested in the result.
      * The deferred may subsequently cancel its operation and reject the
      * promise. Can affect other promises that originate with the same
-     * deferred. Returns `false` if the deferred couldn't be canceled, the
-     * rejection reason otherwise.
+     * deferred. Returns the rejection reason if the deferred was canceled
+     * normally.
      **/
     this.cancel = promise.cancel = function(reason, strict){
       // Cancel can be called even after the deferred is fulfilled
@@ -173,8 +173,8 @@ define([
           }
           signalWaiting(waiting, fulfilled = REJECTED, result = reason);
           waiting = null;
+          return reason;
         }
-        return result;
       }else if(strict === true){
         throw new Error(FULFILLED_ERROR_MESSAGE);
       }
