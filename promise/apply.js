@@ -4,6 +4,8 @@ define([
   "./defer",
   "./when"
 ], function(defer, when){
+  "use strict";
+
   /**
    * promise.apply(func[, thisObject, args]) -> promise.Promise
    * - func (Function)

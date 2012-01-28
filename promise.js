@@ -7,6 +7,8 @@ define([
   "exports",
   "./lib/errorFactory"
 ], function(exports, errorFactory){
+  "use strict";
+
   /**
    * class promise.CancelError
    *

@@ -5,6 +5,8 @@ define([
   "./when",
   "../lib/adapters!lang"
 ], function(defer, when, lang){
+  "use strict";
+
   /**
    * promise.first(objectOrArray) -> promise.Promise
    * - objectOrArray (Object | Array): Accepts both arrays and objects

@@ -5,6 +5,8 @@ define([
   "./all",
   "../lib/adapters!lang"
 ], function(when, all, lang){
+  "use strict";
+
   /**
    * promise.spread(arrayOrPromise[, callback, errback, progback]) -> promise.Promise
    * - arrayOrPromise (?): Either an array or a promise

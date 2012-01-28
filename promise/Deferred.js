@@ -13,6 +13,8 @@ define([
   "./isPromise",
   "./timeout"
 ], function(Compose, lang, errors, Promise, isPromise, timeout){
+  "use strict";
+
   var PROGRESS = 0,
       RESOLVED = 1,
       REJECTED = 2;

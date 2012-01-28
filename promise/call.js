@@ -4,6 +4,8 @@ define([
   "./defer",
   "./when"
 ], function(defer, when){
+  "use strict";
+
   var slice = [].slice;
 
   /**

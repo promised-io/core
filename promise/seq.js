@@ -5,6 +5,8 @@ define([
   "./when",
   "../lib/adapters!lang"
 ], function(defer, when, lang){
+  "use strict";
+
   /**
    * promise.seq(array[, startingValue]) -> promise.Promise
    * - array (Array): List of functions

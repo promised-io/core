@@ -8,6 +8,8 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 define([
   "compose"
 ], function(Compose){
+  "use strict";
+
   function throwAbstract(){
     throw new TypeError("abstract");
   }

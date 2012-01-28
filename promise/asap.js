@@ -3,6 +3,8 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 define([
   "./isPromise"
 ], function(isPromise){
+  "use strict";
+
   /**
    * promise.asap(valueOrPromise[, callback, errback, progback]) -> value | promise.Promise
    * - valueOrPromise (?): Either a regular value or a promise.

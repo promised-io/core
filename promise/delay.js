@@ -4,6 +4,8 @@ define([
   "./defer",
   "../lib/adapters!timers"
 ], function(defer, timers){
+  "use strict";
+
   /**
    * promise.delay([ms]) -> promise.Promise
    * - ms (Number): Delay in milliseconds

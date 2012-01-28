@@ -5,6 +5,8 @@ define([
   "./Promise",
   "./isPromise"
 ], function(defer, Promise, isPromise){
+  "use strict";
+
   /**
    * promise.when(valueOrPromise[, callback, errback, progback]) -> promise.Promise
    * - valueOrPromise (?): Either a regular value or a promise.
