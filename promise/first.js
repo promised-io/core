@@ -10,12 +10,9 @@ define([
    * - objectOrArray (Object | Array): Accepts both arrays and objects
    *
    * Takes multiple promises and returns a new promise that is fulfilled
-   * when the first of these promises is fulfilled.
-   *
-   * Returns new promise that is fulfilled when the first promise is
-   * fulfilled. Canceling the returned promise will *not* cancel any passed
-   * promises. The promise will be fulfilled with the value of the first
-   * fulfilled promise.
+   * when the first of these promises is fulfilled. Canceling the returned
+   * promise will *not* cancel any passed promises. The promise will be
+   * fulfilled with the value of the first fulfilled promise.
    **/
   return function first(objectOrArray){
     var array;

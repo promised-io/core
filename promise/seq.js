@@ -12,7 +12,7 @@ define([
    *
    * Takes an array of asynchronous functions (that return promises) and
    * executes them sequentially. Each function is called with the return
-   * value of the last function
+   * value of the previous function
    *
    * Returns a new promise for the result of the last function. If one of
    * the promises returned by the asynchronous functions is rejected,

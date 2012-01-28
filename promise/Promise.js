@@ -100,6 +100,14 @@ define([
      * - name (String | Number): Name of property to get
      *
      * Gets the value of a property from the fulfilled promise value.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.get("foo").then(console.log);
+     *     deferred.resolve({ foo: "bar" });
+     *     // Logs "bar"
+     *
      **/
     get: function(name){
       return this.then(function(result){
@@ -129,6 +137,15 @@ define([
      *
      * Sets the value of a property on the fulfilled promise value. Returns a
      * promise for the property value.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.put("foo", 42);
+     *     var obj = {};
+     *     deferred.resolve(obj);
+     *     // obj.foo === 42
+     *
      **/
     put: function(name, value){
       return this.then(function(result){
@@ -142,6 +159,14 @@ define([
      *
      * Returns a new promise that'll be resolved with the new value, but not
      * until the promise has been fulfilled.
+     *
+     * ## Example
+     *
+     *     var deferred = defer();
+     *     deferred.promise.change(42).then(console.log);
+     *     deferred.resolve(10);
+     *     // Logs 42
+     *
      **/
     change: function(value){
       return this.then(function(){

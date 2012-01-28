@@ -10,15 +10,12 @@ define([
    * - objectOrArray (Object | Array): Accepts both arrays and objects
    *
    * Takes multiple promises and returns a new promise that is fulfilled
-   * when all promises have been fulfilled.
-   *
-   * Returns a new promise that is fulfilled when all promises have been
-   * fulfilled. If one of those promises is rejected, the returned promise
-   * is also rejected. Canceling the returned promise will *not* cancel any
-   * passed promises. The promise will be fulfilled with a list of results if
-   * invoked with an array, or an object of results when passed an object
-   * (using the same keys). If passed neither an object or array it is
-   * resolved with an undefined value.
+   * when all promises have been fulfilled. If one of the promises is rejected,
+   * the returned promise is also rejected. Canceling the returned promise will
+   * *not* cancel any passed promises. The promise will be fulfilled with a
+   * list of results if invoked with an array, or an object of results when
+   * passed an object (using the same keys). If passed neither an object or
+   * array it is resolved with an undefined value.
    **/
   return function all(objectOrArray){
     var object, array;

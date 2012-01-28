@@ -67,10 +67,10 @@ define([
 
     /**
      * promise.Deferred#progress([update, strict]) -> promise.Promise
+     * - strict (Boolean): if strict, will throw an error if the deferred is fulfilled.
      *
-     * Emit a progress update on the deferred. Throws an error if the deferred
-     * has already been fulfilled. Returns the original promise for the
-     * deferred.
+     * Emit a progress update on the deferred. Returns the original promise
+     * for the deferred.
      **/
     this.progress = function(update, strict){
       if(!fulfilled){
@@ -85,7 +85,7 @@ define([
 
     /**
      * promise.Deferred#resolve([value, strict]) -> promise.Promise
-     * - strict (Boolean): if strict, will throw an error if the deferred has already been resolved.
+     * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
      *
      * Resolve the deferred. Returns the original promise for the deferred.
      **/
@@ -105,7 +105,7 @@ define([
 
     /**
      * promise.Deferred#reject([error, strict]) -> promise.Promise
-     * - strict (Boolean): if strict, will throw an error if the deferred has already been rejected.
+     * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
      *
      * Reject the deferred. Returns the original promise for the deferred.
      **/
@@ -198,7 +198,7 @@ define([
      * - callback (Function)
      *
      * Creates a new function that will invoke the specified callback and use
-     * the return value to resolve the deferred. Automatically catches errors
+     * its return value to resolve the deferred. Automatically catches errors
      * and rejects the deferred instead.
      * 
      * ## Example
