@@ -8,7 +8,7 @@ define([
    * promise.delay([ms]) -> promise.Promise
    * - ms (Number): Delay in milliseconds
    *
-   * Resolves a promise after a delay. In case `ms` is `undefined`, the promise
+   * Resolves a promise after a delay. In case `ms` is not passed, the promise
    * is resolved as quickly as the host environment allows. For example under
    * Node it'd use `process.nextTick()`.
    **/
@@ -19,7 +19,7 @@ define([
       return reason;
     });
 
-    if(typeof ms === "undefined"){
+    if(arguments.length === 0){
       timers.immediate(deferred.resolve);
     }else{
       clearId = timers.set(deferred.resolve, ms);
