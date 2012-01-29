@@ -229,6 +229,25 @@ define([
         inner.progress(obj);
       },
 
+      "with lots of chaining": function(){
+        // Test for <http://bugs.dojotoolkit.org/ticket/14685>
+        var obj = {};
+        var promise = this.deferred.promise;
+        var count = 0;
+        function chain(){
+          count++;
+          return obj;
+        }
+        for(var i = 0; i < 5000; i++){
+          promise = promise.then(chain);
+        }
+        this.deferred.resolve();
+        promise.then(function(result){
+          assert.same(result, obj);
+          assert.same(count, 5000);
+        });
+      },
+
       "is already bound to the deferred": function(){
         var obj = {};
         this.deferred.then(null, null, function(result){

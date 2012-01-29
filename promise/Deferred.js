@@ -271,20 +271,29 @@ define([
     };
   }
 
+  var signalQueue = [];
   function signalDeferred(deferred, type, result){
-    if(!deferred.isCanceled()){
-      switch(type){
-        case PROGRESS:
-          deferred.progress(result);
-          break;
-        case RESOLVED:
-          deferred.resolve(result);
-          break;
-        case REJECTED:
-          deferred.reject(result);
-          break;
+    signalQueue.push(deferred, type, result);
+    if(signalQueue.length > 3){
+      return;
+    }
+
+    for(var i = 0; i < signalQueue.length; i += 3){
+      if(!signalQueue[i].isCanceled()){
+        switch(signalQueue[i + 1]){
+          case PROGRESS:
+            signalQueue[i].progress(signalQueue[i + 2]);
+            break;
+          case RESOLVED:
+            signalQueue[i].resolve(signalQueue[i + 2]);
+            break;
+          case REJECTED:
+            signalQueue[i].reject(signalQueue[i + 2]);
+            break;
+        }
       }
     }
+    signalQueue = [];
   }
 
   return Deferred;
