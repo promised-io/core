@@ -8,11 +8,12 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 define([
   "compose",
   "../lib/adapters!lang",
+  "../lib/adapters!timers",
   "../promise",
   "./Promise",
   "./isPromise",
   "./timeout"
-], function(Compose, lang, errors, Promise, isPromise, timeout){
+], function(Compose, lang, timers, errors, Promise, isPromise, timeout){
   "use strict";
 
   var PROGRESS = 0,
@@ -74,7 +75,7 @@ define([
      * Emit a progress update on the deferred. Returns the original promise
      * for the deferred.
      **/
-    this.progress = function(update, strict){
+    var progress = this.progress = function(update, strict){
       if(!fulfilled){
         signalWaiting(waiting, PROGRESS, update);
         return promise;
@@ -86,12 +87,23 @@ define([
     };
 
     /**
+     * promise.Deferred#progressLater([update]) -> promise.Promise
+     *
+     * Emit a progress update on the deferred on the next tick. Returns the
+     * original promise for the deferred.
+     **/
+    this.progressLater = function(update){
+      timers.immediate(function(){ progress(update); });
+      return promise;
+    };
+
+    /**
      * promise.Deferred#resolve([value, strict]) -> promise.Promise
      * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
      *
      * Resolve the deferred. Returns the original promise for the deferred.
      **/
-    this.resolve = function(value, strict){
+    var resolve = this.resolve = function(value, strict){
       if(!fulfilled){
         // Set fulfilled, store value. After signaling waiting listeners unset
         // waiting.
@@ -106,12 +118,23 @@ define([
     };
 
     /**
+     * promise.Deferred#resolveLater([value]) -> promise.Promise
+     *
+     * Resolves the deferred on the next tick. Returns the original promise
+     * for the deferred.
+     **/
+    this.resolveLater = function(value){
+      timers.immediate(function(){ resolve(value); });
+      return promise;
+    };
+
+    /**
      * promise.Deferred#reject([error, strict]) -> promise.Promise
      * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
      *
      * Reject the deferred. Returns the original promise for the deferred.
      **/
-    this.reject = function(error, strict){
+    var reject = this.reject = function(error, strict){
       if(!fulfilled){
         signalWaiting(waiting, fulfilled = REJECTED, result = error);
         waiting = null;
@@ -121,6 +144,17 @@ define([
       }else{
         return promise;
       }
+    };
+
+    /**
+     * promise.Deferred#rejectLater([error]) -> promise.Promise
+     *
+     * Rejects the deferred on the next tick. Returns the original promise
+     * for the deferred.
+     **/
+    this.rejectLater = function(error){
+      timers.immediate(function(){ reject(error); });
+      return promise;
     };
 
     /**

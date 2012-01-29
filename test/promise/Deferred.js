@@ -79,6 +79,15 @@ define([
         });
         var resolve = this.deferred.resolve;
         resolve(obj);
+      },
+
+      "later": function(){
+        var obj = {};
+        this.deferred.resolveLater(obj);
+        refute(this.deferred.isFulfilled());
+        return this.deferred.then(function(result){
+          assert.same(result, obj);
+        });
       }
     },
 
@@ -149,6 +158,15 @@ define([
         });
         var reject = this.deferred.reject;
         reject(obj);
+      },
+
+      "later": function(){
+        var obj = {};
+        this.deferred.rejectLater(obj);
+        refute(this.deferred.isFulfilled());
+        return this.deferred.then(null, function(result){
+          assert.same(result, obj);
+        });
       }
     },
 
@@ -255,6 +273,15 @@ define([
         });
         var progress = this.deferred.progress;
         progress(obj);
+      },
+
+      "later": function(){
+        var obj = {};
+        this.deferred.progressLater(obj);
+        refute(this.deferred.isFulfilled());
+        return this.deferred.then(null, null, function(result){
+          assert.same(result, obj);
+        });
       }
     },
 
