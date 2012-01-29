@@ -176,6 +176,8 @@ define([
           signalWaiting(waiting, fulfilled = REJECTED, result = reason);
           waiting = null;
           return reason;
+        }else if(fulfilled === REJECTED && result === reason){
+          return reason;
         }
       }else if(strict === true){
         throw new Error(FULFILLED_ERROR_MESSAGE);

@@ -344,6 +344,14 @@ define([
         assert.same(reason, obj);
       },
 
+      "returns reason from canceler, if canceler rejects with reason": function(){
+        var obj = {};
+        var deferred = this.deferred;
+        this.canceler = function(){ deferred.reject(obj); return obj; };
+        var reason = this.deferred.cancel();
+        assert.same(reason, obj);
+      },
+
       "with undefined reason returned from canceler results in CancelError": function(){
         this.canceler = function(){ return undefined; };
         var reason = this.deferred.cancel();
