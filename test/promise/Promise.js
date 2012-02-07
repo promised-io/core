@@ -57,14 +57,14 @@ define([
 
       "with undefined result": function(){
         this.deferred.promise.get("foo").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       },
 
       "with null result": function(){
         this.deferred.promise.get("foo").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve(null);
       }
@@ -101,14 +101,14 @@ define([
 
       "with undefined result": function(){
         this.deferred.promise.invoke("foo").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       },
 
       "with null result": function(){
         this.deferred.promise.invoke("foo").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve(null);
       },
@@ -136,14 +136,14 @@ define([
 
       "with undefined result": function(){
         this.deferred.promise.put("foo", "bar").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       },
 
       "with null result": function(){
         this.deferred.promise.put("foo", "bar").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve(null);
       }
@@ -189,14 +189,14 @@ define([
 
       "with undefined result": function(){
         this.deferred.promise.del("foo").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       },
 
       "with null result": function(){
         this.deferred.promise.del("foo").then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve(null);
       }
@@ -230,7 +230,7 @@ define([
       "non-callable": function(){
         var obj1 = {}, obj2 = {};
         this.deferred.promise.call().then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       }
@@ -264,7 +264,7 @@ define([
       "non-callable": function(){
         var obj1 = {}, obj2 = {};
         this.deferred.promise.apply().then(null, function(result){
-          assert.isInstance(result, TypeError, "TypeError");
+          assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       }
