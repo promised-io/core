@@ -30,12 +30,11 @@ define([
     var ix = 0;
 
     var halting = false;
-    var deferred = defer(function(reason){
+    var deferred = defer(function(){
       halting = true;
       // Don't pass the reason to the current promise, such signaling will
       // require a different strategy.
       currentPromise.cancel();
-      return reason;
     });
 
     // If the current promise is canceled because we are canceled, that

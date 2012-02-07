@@ -200,7 +200,8 @@ define([
       if(!fulfilled){
         canceled = true;
         if(canceler){
-          reason = canceler(reason);
+          var returnedReason = canceler(reason);
+          reason = typeof returnedReason === "undefined" ? reason : returnedReason;
         }
         if(!fulfilled){
           // Allow canceler to provide its own reason, but fall back to a CancelError

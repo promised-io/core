@@ -379,9 +379,19 @@ define([
         assert.same(reason, obj);
       },
 
-      "with undefined reason returned from canceler results in CancelError": function(){
-        this.canceler = function(){ return undefined; };
+      "with canceler not returning anything, returns default CancelError": function(){
+        this.canceler = function(){};
         var reason = this.deferred.cancel();
+        this.deferred.then(null, function(result){
+          assert.same(result, reason);
+        });
+      },
+
+      "with canceler not returning anything, still returns passed reason": function(){
+        var obj = {};
+        this.canceler = function(){};
+        var reason = this.deferred.cancel(obj);
+        assert.same(reason, obj);
         this.deferred.then(null, function(result){
           assert.same(result, reason);
         });

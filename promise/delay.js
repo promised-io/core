@@ -16,9 +16,8 @@ define([
    **/
   return function delay(ms){
     var clearId;
-    var deferred = defer(function(reason){
+    var deferred = defer(function(){
       clearId && timers.clear(clearId);
-      return reason;
     });
 
     if(arguments.length === 0){
