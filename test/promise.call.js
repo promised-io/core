@@ -1,11 +1,12 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "../../promise/call",
-  "../../promise/defer"
-], function(buster, call, defer){
-  buster.testCase("promise/call", {
+  "./test-case",
+  "./test-case/assert",
+  "../promise/call",
+  "../promise/defer"
+], function(testCase, assert, call, defer){
+  return testCase("promise/call", {
     "returning value": function(){
       var obj = {};
       return call(function(){ return obj; }).then(function(result){

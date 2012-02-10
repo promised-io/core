@@ -1,23 +1,25 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "../../promise/defer",
-  "../../promise/later",
-  "../../promise/Promise",
-  "../../promise/Deferred"
-], function(buster, defer, later, Promise, Deferred){
-  buster.testCase("promise/later", {
-    setUp: function(){
+  "./test-case",
+  "./test-case/assert",
+  "./test-case/refute",
+  "../promise/defer",
+  "../promise/later",
+  "../promise/Promise",
+  "../promise/Deferred"
+], function(testCase, assert, refute, defer, later, Promise, Deferred){
+  return testCase("promise/later", {
+    beforeEach: function(){
       this.deferred = defer();
     },
 
     "returns the same promise without callbacks": function(){
       var obj = {};
       var promise1 = later(obj);
-      assert.isInstance(promise1, Promise, "promise.Promise");
+      assert(promise1 instanceof Promise);
       var promise2 = later(this.deferred.promise);
-      assert.isInstance(promise2, Promise, "promise.Promise");
+      assert(promise2 instanceof Promise);
       assert.same(this.deferred.promise, promise2);
     },
 
@@ -66,7 +68,7 @@ define([
     "with chaining of the result": function(){
       function square(n){ return n * n; }
 
-      later(2, square).then(square).then(function(n){
+      return later(2, square).then(square).then(function(n){
         assert.same(n, 16);
       });
     },
@@ -78,10 +80,11 @@ define([
 
       var obj = {};
       promise.then(function(result){
-        assert.isInstance(promise, Promise, "promise.Promise");
+        assert(promise instanceof Promise);
         assert.same(result, obj);
       });
       _callback(obj);
+      return promise;
     }
   });
 });

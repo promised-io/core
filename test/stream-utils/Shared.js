@@ -1,7 +1,7 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
+  "../test-case/assert",
   "../../stream",
   "../../promise/defer",
   "../../promise/when",
@@ -9,7 +9,7 @@ define([
   "../../promise/delay",
   "../../lib/adapters!lang",
   "../../lib/adapters!timers"
-], function(buster, errors, defer, when, isPromise, delay, lang, timers){
+], function(assert, errors, defer, when, isPromise, delay, lang, timers){
   "use strict";
 
   return function(){

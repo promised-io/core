@@ -1,14 +1,16 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "../../promise/defer",
-  "../../promise/Promise",
-  "../../promise/Deferred",
-  "../../promise"
-], function(buster, defer, Promise, Deferred, errors){
-  buster.testCase("promise/Deferred", {
-    setUp: function(){
+  "./test-case",
+  "./test-case/assert",
+  "./test-case/refute",
+  "../promise/defer",
+  "../promise/Promise",
+  "../promise/Deferred",
+  "../promise"
+], function(testCase, assert, refute, defer, Promise, Deferred, errors){
+  return testCase("promise/Deferred", {
+    beforeEach: function(){
       this.deferred = defer();
     },
 
@@ -32,7 +34,7 @@ define([
       "returns promise": function(){
         var obj = {};
         var returnedPromise = this.deferred.resolve(obj);
-        assert.isInstance(returnedPromise, Promise, "promise.Promise");
+        assert(returnedPromise instanceof Promise);
         assert.same(returnedPromise, this.deferred.promise);
       },
 
@@ -111,7 +113,7 @@ define([
       "returns promise": function(){
         var obj = {};
         var returnedPromise = this.deferred.reject(obj);
-        assert.isInstance(returnedPromise, Promise, "promise.Promise");
+        assert(returnedPromise instanceof Promise);
         assert.same(returnedPromise, this.deferred.promise);
       },
 
@@ -190,7 +192,7 @@ define([
       "returns promise": function(){
         var obj = {};
         var returnedPromise = this.deferred.progress(obj);
-        assert.isInstance(returnedPromise, Promise, "promise.Promise");
+        assert(returnedPromise instanceof Promise);
         assert.same(returnedPromise, this.deferred.promise);
       },
 
@@ -286,7 +288,7 @@ define([
     },
 
     "cancel": {
-      setUp: function(){
+      beforeEach: function(){
         var self = this;
         this.canceler = function(reason){};
         this.deferred = defer(function(reason){ return self.canceler(reason); });
@@ -346,7 +348,7 @@ define([
 
       "returns default reason": function(){
         var reason = this.deferred.cancel();
-        assert.isInstance(reason, errors.CancelError, "promise.CancelError");
+        assert(reason instanceof errors.CancelError);
       },
 
       "passing reason to canceler": function(){
@@ -453,7 +455,7 @@ define([
 
       "is already bound to the deferred": function(){
         this.deferred.then(null, function(result){
-          assert.isInstance(result, errors.CancelError, "promise.CancelError");
+          assert(result instanceof errors.CancelError);
         });
         var cancel = this.deferred.cancel;
         cancel();
