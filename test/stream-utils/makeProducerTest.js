@@ -1,9 +1,11 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "./_testSource",
-  "./_sharedTests",
+  "../test-case",
+  "../test-case/assert",
+  "../test-case/refute",
+  "./TestSource",
+  "./Shared",
   "../../stream",
   "../../promise/defer",
   "../../promise/when",
@@ -11,15 +13,15 @@ define([
   "../../promise/delay",
   "../../lib/adapters!lang",
   "../../lib/adapters!timers"
-], function(buster, Source, Shared, errors, defer, when, isPromise, delay, lang, timers){
+], function(testCase, assert, refute, Source, Shared, errors, defer, when, isPromise, delay, lang, timers){
   "use strict";
 
   return function(name, klass, init){
     var instance, produce, finish, consumed, values;
     var shared = new Shared;
 
-    buster.testCase(name, {
-      setUp: function(){
+    return testCase(name, {
+      beforeEach: function(){
         consumed = 0;
         values = [{}, {}, {}];
 
@@ -42,7 +44,7 @@ define([
               produce();
             }
             source.finish();
-          }
+          };
         }else{
           // Else we assume the returned producer has bufferred all values
           produce = finish = lang.noop;
@@ -573,7 +575,7 @@ define([
       },
 
       // bufferAll() makes no sense for a non-repeatable producer
-      "bufferAll": !klass.prototype.isRepeatable || !klass.prototype.bufferAll ? undefined : {
+      "bufferAll": !klass.prototype.isRepeatable || !klass.prototype.bufferAll ? testCase.Skip : {
         "returns promise": function(){
           assert(isPromise(instance.bufferAll()));
         },
@@ -604,12 +606,12 @@ define([
         }
       },
 
-      "toArray": !klass.prototype.toArray ? undefined : shared.tests.toArray,
-      "length": !klass.prototype.length ? undefined : shared.tests.length,
-      "get": !klass.prototype.get ? undefined : shared.tests.get,
-      "last": !klass.prototype.last ? undefined : shared.tests.last,
-      "indexOf": !klass.prototype.indexOf ? undefined : shared.tests.indexOf,
-      "lastIndexOf": !klass.prototype.lastIndexOf ? undefined : shared.tests.lastIndexOf
+      "toArray": !klass.prototype.toArray ? testCase.Skip : shared.tests.toArray,
+      "length": !klass.prototype.length ? testCase.Skip : shared.tests.length,
+      "get": !klass.prototype.get ? testCase.Skip : shared.tests.get,
+      "last": !klass.prototype.last ? testCase.Skip : shared.tests.last,
+      "indexOf": !klass.prototype.indexOf ? testCase.Skip : shared.tests.indexOf,
+      "lastIndexOf": !klass.prototype.lastIndexOf ? testCase.Skip : shared.tests.lastIndexOf
     });
   };
 });

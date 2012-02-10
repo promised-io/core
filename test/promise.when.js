@@ -1,23 +1,24 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "../../promise/defer",
-  "../../promise/when",
-  "../../promise/Promise",
-  "../../promise/Deferred"
-], function(buster, defer, when, Promise, Deferred){
-  buster.testCase("promise/when", {
-    setUp: function(){
+  "./test-case",
+  "./test-case/assert",
+  "../promise/defer",
+  "../promise/when",
+  "../promise/Promise",
+  "../promise/Deferred"
+], function(testCase, assert, defer, when, Promise, Deferred){
+  return testCase("promise/when", {
+    beforeEach: function(){
       this.deferred = defer();
     },
 
     "returns the same promise without callbacks": function(){
       var obj = {};
       var promise1 = when(obj);
-      assert.isInstance(promise1, Promise, "promise.Promise");
+      assert(promise1 instanceof Promise);
       var promise2 = when(this.deferred.promise);
-      assert.isInstance(promise2, Promise, "promise.Promise");
+      assert(promise2 instanceof Promise);
       assert.same(this.deferred.promise, promise2);
     },
 
@@ -67,7 +68,7 @@ define([
 
       var obj = {};
       promise.then(function(result){
-        assert.isInstance(promise, Promise, "promise.Promise");
+        assert(promise instanceof Promise);
         assert.same(result, obj);
       });
       _callback(obj);

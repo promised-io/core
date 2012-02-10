@@ -5,9 +5,6 @@
     "amdefine": "0.0.1",
     "compose": "https://github.com/kriszyp/compose/tarball/a4e0b1bfae494ac6c2f3964783ddd91c0376b9cc"
   },
-  "devDependencies": {
-    "buster": "0.3.0"
-  },
   "directories": {
     "lib": ".",
     "doc": "./doc"

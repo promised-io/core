@@ -1,9 +1,11 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "./_testSource",
-  "./_sharedTests",
+  "../test-case",
+  "../test-case/assert",
+  "../test-case/refute",
+  "./TestSource",
+  "./Shared",
   "../../stream",
   "../../stream/Stream",
   "../../promise/defer",
@@ -13,15 +15,15 @@ define([
   "../../promise/all",
   "../../lib/adapters!lang",
   "../../lib/adapters!timers"
-], function(buster, Source, Shared, errors, Stream, defer, when, isPromise, delay, all, lang, timers){
+], function(testCase, assert, refute, Source, Shared, errors, Stream, defer, when, isPromise, delay, all, lang, timers){
   "use strict";
 
   return function(name, klass, repeatable, init){
     var instance, produce, finish, consumed, values;
     var shared = new Shared;
 
-    buster.testCase(name, {
-      setUp: function(){
+    return testCase(name, {
+      beforeEach: function(){
         consumed = 0;
         values = [{}, {}, {}];
 
@@ -44,9 +46,9 @@ define([
               produce();
             }
             source.finish();
-          }
+          };
         }else{
-          // Else we assume the returned producer has bufferred all values
+          // Else we assume the returned producer has buffered all values
           produce = finish = lang.noop;
           consumed = values.length;
         }
@@ -1001,7 +1003,7 @@ define([
       },
 
       "join": {
-        setUp: function(){
+        beforeEach: function(){
           values.splice(0, 3, "foo", "bar", "baz");
         },
 
@@ -1019,7 +1021,7 @@ define([
       },
 
       "toSortedArray": {
-        setUp: function(){
+        beforeEach: function(){
           values.splice(0, 3, 9, 4, 5);
           this.sortFunc = function(a, b){ return a - b; };
         },
@@ -1067,7 +1069,7 @@ define([
       "lastIndexOf": shared.tests.lastIndexOf,
 
       "parseJSON": {
-        setUp: function(){
+        beforeEach: function(){
           values.splice(0, 3, '{"foo', '":"bar"', '}');
         },
 
@@ -1102,11 +1104,11 @@ define([
       },
 
       "toRepeatableStream": {
-        "returns same stream": !repeatable ? undefined : function(){
+        "returns same stream": !repeatable ? testCase.Skip : function(){
           assert.same(instance, instance.toRepeatableStream());
         },
 
-        "returns a new, repeatable stream": repeatable ? undefined : function(){
+        "returns a new, repeatable stream": repeatable ? testCase.Skip : function(){
           var result = instance.toRepeatableStream();
           refute.same(result, instance);
           assert(result instanceof Stream);
@@ -1114,7 +1116,7 @@ define([
         }
       },
 
-      "repeatable streams won't get exhausted": !repeatable ? undefined : function(){
+      "repeatable streams won't get exhausted": !repeatable ? testCase.Skip : function(){
         // Let's just run everything back-to-back!
         finish();
         return all([
@@ -1141,7 +1143,7 @@ define([
         ]).then(assert);
       },
 
-      "non-repeatable streams get exhausted": repeatable ? undefined : function(){
+      "non-repeatable streams get exhausted": repeatable ? testCase.Skip : function(){
         var identity = function(identity){ return identity; };
         finish();
         var promise = instance.consume(lang.noop);

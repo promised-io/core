@@ -1,11 +1,13 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "../../promise/defer",
-  "../../promise/isPromise"
-], function(buster, defer, isPromise){
-  buster.testCase("promise/isPromise", {
+  "./test-case",
+  "./test-case/assert",
+  "./test-case/refute",
+  "../promise/defer",
+  "../promise/isPromise"
+], function(testCase, assert, refute, defer, isPromise){
+  return testCase("promise/isPromise", {
     "tests correctly": function(){
       refute(isPromise(true));
       assert(isPromise(defer()));

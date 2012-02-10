@@ -1,10 +1,12 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
-  "../../promise/delay"
-], function(buster, delay){
-  buster.testCase("promise/delay", {
+  "./test-case",
+  "./test-case/assert",
+  "./test-case/refute",
+  "../promise/delay"
+], function(testCase, assert, refute, delay){
+  return testCase("promise/delay", {
     "immediate": function(done){
       var promise = delay();
       refute(promise.isResolved());

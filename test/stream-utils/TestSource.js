@@ -1,7 +1,6 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 define([
-  "buster",
   "compose",
   "../../stream",
   "../../stream/Producer",
@@ -10,7 +9,7 @@ define([
   "../../promise/isPromise",
   "../../lib/adapters!lang",
   "../../lib/adapters!timers"
-], function(buster, Compose, errors, Producer, defer, when, isPromise, lang, timers){
+], function(Compose, errors, Producer, defer, when, isPromise, lang, timers){
   "use strict";
 
   return Compose(Producer, function(onConsumption){
