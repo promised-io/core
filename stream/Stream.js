@@ -59,7 +59,7 @@ define([
       if(this.isRepeatable()){
         return this;
       }
-      return new Stream(new RepeatProducer(this._producer));
+      return new this.constructor(new RepeatProducer(this._producer));
     }),
 
     /**
@@ -201,7 +201,7 @@ define([
           }), true);
         })
       });
-      return new Stream(combinedProducer);
+      return new this.constructor(combinedProducer);
     }),
 
     /**
@@ -240,7 +240,7 @@ define([
           });
         })
       });
-      return new Stream(filteredProducer);
+      return new this.constructor(filteredProducer);
     }),
 
     /**
@@ -277,7 +277,7 @@ define([
           });
         })
       });
-      return new Stream(mappedProducer);
+      return new this.constructor(mappedProducer);
     }),
 
     /**

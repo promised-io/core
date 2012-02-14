@@ -219,7 +219,7 @@ define([
       "concat": {
         "returns new stream": function(){
           var concatenated = instance.concat([]);
-          assert(concatenated instanceof Stream);
+          assert(concatenated instanceof instance.constructor);
           refute(concatenated.isRepeatable());
         },
 
@@ -291,7 +291,7 @@ define([
           var filtered = instance.filter();
           refute.same(filtered, instance);
           assert.same(filtered.isRepeatable(), instance.isRepeatable());
-          assert(filtered instanceof Stream);
+          assert(filtered instanceof instance.constructor);
         },
 
         "does filter": function(){
@@ -446,7 +446,7 @@ define([
           var mapped = instance.map();
           refute.same(mapped, instance);
           assert.same(mapped.isRepeatable(), instance.isRepeatable());
-          assert(mapped instanceof Stream);
+          assert(mapped instanceof instance.constructor);
         },
 
         "does map": function(){
@@ -1111,7 +1111,7 @@ define([
         "returns a new, repeatable stream": repeatable ? testCase.Skip : function(){
           var result = instance.toRepeatableStream();
           refute.same(result, instance);
-          assert(result instanceof Stream);
+          assert(result instanceof instance.constructor);
           assert(result.isRepeatable());
         }
       },
