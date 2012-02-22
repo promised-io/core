@@ -1,15 +1,15 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 /**
- * class stream.RepeatProducer < stream.Producer
- *
- * A producer that can be consumed multiple times as it buffers its produced
- * values.
- **/
+* class stream.RepeatProducer < stream.Producer
+*
+* A producer that can be consumed multiple times as it buffers its produced
+* values.
+**/
 define([
   "compose",
   "./Producer",
-  "../stream",
+  "./_errors",
   "./_helpers",
   "../promise/defer",
   "../promise/when",
@@ -91,11 +91,11 @@ define([
   });
 
   /**
-   * new stream.RepeatProducer(source)
-   * - source (stream.Producer): The source producer, does not have to be a [[stream.Producer]] as long as it implements the same API
-   *
-   * Construct a repeat producer out of another producer.
-   **/
+  * new stream.RepeatProducer(source)
+  * - source (stream.Producer): The source producer, does not have to be a [[stream.Producer]] as long as it implements the same API
+  *
+  * Construct a repeat producer out of another producer.
+  **/
   return Producer.extend(function(source){
     this._source = source;
     this._values = [];
@@ -114,11 +114,11 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#bufferAll() -> promise.Promise
-     *
-     * Ensure the producer buffers all values to be repeated by subsequent
-     * `consume()` calls.
-     **/
+    * stream.RepeatProducer#bufferAll() -> promise.Promise
+    *
+    * Ensure the producer buffers all values to be repeated by subsequent
+    * `consume()` calls.
+    **/
     bufferAll: function(){
       if(this._bufferAll && !this._bufferAll.isRejected()){
         return this._bufferAll;
@@ -132,10 +132,10 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#toArray() -> Array | promise.Promise
-     *
-     * Return a regular `Array` for the produced values.
-     **/
+    * stream.RepeatProducer#toArray() -> Array | promise.Promise
+    *
+    * Return a regular `Array` for the produced values.
+    **/
     toArray: function(){
       if(this._finished){
         return this._values.slice();
@@ -145,10 +145,10 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#length() -> Number | promise.Promise
-     *
-     * Determine the number of values that can be produced.
-     **/
+    * stream.RepeatProducer#length() -> Number | promise.Promise
+    *
+    * Determine the number of values that can be produced.
+    **/
     length: function(){
       if(this._finished){
         return this._values.length;
@@ -158,13 +158,13 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#get(index) -> value | promise.Promise
-     * - index (Number)
-     *
-     * Optimized function to get a value at a particular index. Only returns
-     * a promise if the value has not yet been produced. Returns a promise that
-     * is rejected with a `RangeError` if no value exists at the given index.
-     **/
+    * stream.RepeatProducer#get(index) -> value | promise.Promise
+    * - index (Number)
+    *
+    * Optimized function to get a value at a particular index. Only returns
+    * a promise if the value has not yet been produced. Returns a promise that
+    * is rejected with a `RangeError` if no value exists at the given index.
+    **/
     get: function(index){
       if(index < this._values.length){
         return this._values[index];
@@ -176,12 +176,12 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#last() -> value | promise.Promise
-     *
-     * Returns the last value produced. Only returns a promise if production
-     * hasn't finished. Returns a promise that is rejected with a `RangeError`
-     * if no values were produced.
-     **/
+    * stream.RepeatProducer#last() -> value | promise.Promise
+    *
+    * Returns the last value produced. Only returns a promise if production
+    * hasn't finished. Returns a promise that is rejected with a `RangeError`
+    * if no values were produced.
+    **/
     last: function(){
       if(this._finished){
         if(this._values.length){
@@ -195,12 +195,12 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#indexOf(searchElement[, fromIndex]) -> Number | promise.Promise
-     * - searchElement (?)
-     * - fromIndex (Number)
-     *
-     * Try to find the `searchElement` in the produced values.
-     **/
+    * stream.RepeatProducer#indexOf(searchElement[, fromIndex]) -> Number | promise.Promise
+    * - searchElement (?)
+    * - fromIndex (Number)
+    *
+    * Try to find the `searchElement` in the produced values.
+    **/
     indexOf: function(searchElement, fromIndex){
       fromIndex = Number(fromIndex) || 0;
 
@@ -212,12 +212,12 @@ define([
     },
 
     /**
-     * stream.RepeatProducer#lastIndexOf(searchElement[, fromIndex]) -> Number | promise.Promise
-     * - searchElement (?)
-     * - fromIndex (Number)
-     *
-     * Try to find the `searchElement` in the produced values.
-     **/
+    * stream.RepeatProducer#lastIndexOf(searchElement[, fromIndex]) -> Number | promise.Promise
+    * - searchElement (?)
+    * - fromIndex (Number)
+    *
+    * Try to find the `searchElement` in the produced values.
+    **/
     lastIndexOf: function(searchElement, fromIndex){
       fromIndex = Number(fromIndex);
       if(fromIndex !== 0 && !fromIndex){

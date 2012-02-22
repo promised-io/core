@@ -6,7 +6,7 @@ define([
   "../test-case/refute",
   "./TestSource",
   "./Shared",
-  "../../stream",
+  "../../stream/_errors",
   "../../stream/Stream",
   "../../promise/defer",
   "../../promise/when",

@@ -2,14 +2,16 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 
 define([
   "compose",
-  "../stream"
+  "./_errors"
 ], function(Compose, errors){
+  "use strict";
+
   /**
-   * stream.ExhaustiveDecorator(method) -> Compose.Decorator
-   * - method (Function)
-   *
-   * [[Compose]] decorator to enforce producer & stream exhaustion
-   **/
+  * stream.ExhaustiveDecorator(method) -> Compose.Decorator
+  * - method (Function)
+  *
+  * [[Compose]] decorator to enforce producer & stream exhaustion
+  **/
   return function Exhaustive(method){
     return new Compose.Decorator(function(key){
       this[key] = function(){

@@ -2,7 +2,7 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 
 define([
   "../test-case/assert",
-  "../../stream",
+  "../../stream/_errors",
   "../../promise/defer",
   "../../promise/when",
   "../../promise/isPromise",

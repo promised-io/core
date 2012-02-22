@@ -8,20 +8,20 @@ define([
   "use strict";
 
   /**
-   * promise.seq(array[, startingValue]) -> promise.Promise
-   * - array (Array): List of functions
-   * - startingValue (?): The value to pass to the first function
-   *
-   * Takes an array of asynchronous functions (that return promises) and
-   * executes them sequentially. Each function is called with the return
-   * value of the previous function
-   *
-   * Returns a new promise for the result of the last function. If one of
-   * the promises returned by the asynchronous functions is rejected,
-   * the returned promise is rejected and processing halts. Canceling the
-   * returned promise will halt processing and cancel the promise returned
-   * by the asynchronous function that last executed.
-   **/
+  * promise.seq(array[, startingValue]) -> promise.Promise
+  * - array (Array): List of functions
+  * - startingValue (?): The value to pass to the first function
+  *
+  * Takes an array of asynchronous functions (that return promises) and
+  * executes them sequentially. Each function is called with the return
+  * value of the previous function
+  *
+  * Returns a new promise for the result of the last function. If one of
+  * the promises returned by the asynchronous functions is rejected,
+  * the returned promise is rejected and processing halts. Canceling the
+  * returned promise will halt processing and cancel the promise returned
+  * by the asynchronous function that last executed.
+  **/
   return function seq(array, startingValue){
     // Copy array so behavior can't be altered while processing.
     array = array.slice();

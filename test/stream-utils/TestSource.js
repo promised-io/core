@@ -2,7 +2,7 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 
 define([
   "compose",
-  "../../stream",
+  "../../stream/_errors",
   "../../stream/Producer",
   "../../promise/defer",
   "../../promise/when",

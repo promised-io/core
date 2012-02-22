@@ -2,10 +2,12 @@ if (typeof define !== 'function') { var define = (require('amdefine'))(module); 
 
 define([
   "exports",
-  "../stream",
+  "./_errors",
   "../promise/asap",
   "../lib/adapters!lang"
 ], function(exports, errors, asap, lang){
+  "use strict";
+
   exports.get = function(producer, index){
     var result;
     return producer.consume(function(value, valueIndex){
@@ -44,5 +46,5 @@ define([
     return asap(producer.toArray(), function(array){
       return lang.lastIndexOf(array, searchElement, fromIndex);
     });
-  }
+  };
 });

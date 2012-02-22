@@ -1,13 +1,13 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 /**
- * class stream.Stream
- *
- * Promised-based API for consuming streaming data.
- **/
+* class stream.Stream
+*
+* Promised-based API for consuming streaming data.
+**/
 define([
   "compose",
-  "../stream",
+  "./_errors",
   "./ExhaustiveDecorator",
   "./_helpers",
   "./Producer",
@@ -23,12 +23,12 @@ define([
   "use strict";
 
   /**
-   * new stream.Stream(source)
-   * - source (stream.Producer | Array): The source producer, does not have to be a [[stream.Producer]] as long as it implements the same API.
-   *
-   * Construct a stream that consumes values from the source producer.
-   * If `source` is an array a [[stream.ArrayProducer]] is created and used.
-   **/
+  * new stream.Stream(source)
+  * - source (stream.Producer | Array): The source producer, does not have to be a [[stream.Producer]] as long as it implements the same API.
+  *
+  * Construct a stream that consumes values from the source producer.
+  * If `source` is an array a [[stream.ArrayProducer]] is created and used.
+  **/
   var Stream = Compose(function(source){
     if(lang.isArray(source)){
       this._producer = new ArrayProducer(source);
@@ -39,22 +39,22 @@ define([
     _exhausted: false,
 
     /**
-     * stream.Stream#isRepeatable() -> Boolean
-     *
-     * Tests whether the underlying producer is repeatable.
-     **/
+    * stream.Stream#isRepeatable() -> Boolean
+    *
+    * Tests whether the underlying producer is repeatable.
+    **/
     isRepeatable: function(){
       return this._producer.isRepeatable === true;
     },
 
     /**
-     * stream.Stream#toRepeatableStream() -> stream.Stream
-     *
-     * If the stream is not repeatable, creates and returns a new repeatable
-     * stream using a [[stream.RepeatProducer]] for the original stream source.
-     *
-     * If the stream already was repeatable returns the same stream instance.
-     **/
+    * stream.Stream#toRepeatableStream() -> stream.Stream
+    *
+    * If the stream is not repeatable, creates and returns a new repeatable
+    * stream using a [[stream.RepeatProducer]] for the original stream source.
+    *
+    * If the stream already was repeatable returns the same stream instance.
+    **/
     toRepeatableStream: Exhaustive(function(){
       if(this.isRepeatable()){
         return this;
@@ -63,13 +63,13 @@ define([
     }),
 
     /**
-     * stream.Stream#consume(callback[, thisObject]) -> promise.Promise
-     * - callback (Function): function(value, index, stream){ … }
-     * - thisObject (?)
-     *
-     * Consume the stream. The callback follows producer semantics so can
-     * provide backpressure or throw `stream.StopConsumption`.
-     **/
+    * stream.Stream#consume(callback[, thisObject]) -> promise.Promise
+    * - callback (Function): function(value, index, stream){ … }
+    * - thisObject (?)
+    *
+    * Consume the stream. The callback follows producer semantics so can
+    * provide backpressure or throw `stream.StopConsumption`.
+    **/
     consume: Exhaustive(function(callback, thisObject){
       var stream = this;
       return this._producer.consume(function(value, index){
@@ -78,10 +78,10 @@ define([
     }),
 
     /**
-     * stream.Stream#toArray() -> Array | promise.Promise
-     *
-     * Returns a regular array for the stream.
-     **/
+    * stream.Stream#toArray() -> Array | promise.Promise
+    *
+    * Returns a regular array for the stream.
+    **/
     toArray: Exhaustive(function(){
       if(typeof this._producer.toArray === "function"){
         return this._producer.toArray();
@@ -94,10 +94,10 @@ define([
     }),
 
     /**
-     * stream.Stream#length() -> Number | promise.Promise
-     *
-     * Returns the number of items in the stream.
-     **/
+    * stream.Stream#length() -> Number | promise.Promise
+    *
+    * Returns the number of items in the stream.
+    **/
     length: Exhaustive(function(){
       if(typeof this._producer.length === "function"){
         return this._producer.length();
@@ -112,13 +112,13 @@ define([
     }),
 
     /**
-     * stream.Stream#get(index) -> value | promise.Promise
-     * - index (Number)
-     *
-     * Get a value at a particular index in the stream. Only returns
-     * a promise if the value has not yet been produced. Throws a `RangeError`
-     * if no value exists at the given index.
-     **/
+    * stream.Stream#get(index) -> value | promise.Promise
+    * - index (Number)
+    *
+    * Get a value at a particular index in the stream. Only returns
+    * a promise if the value has not yet been produced. Throws a `RangeError`
+    * if no value exists at the given index.
+    **/
     get: Exhaustive(function(index){
       if(typeof this._producer.get === "function"){
         return this._producer.get(index);
@@ -128,19 +128,19 @@ define([
     }),
 
     /**
-     * stream.Stream#first() -> value | promise.Promise
-     *
-     * Returns the first item in the stream.
-     **/
+    * stream.Stream#first() -> value | promise.Promise
+    *
+    * Returns the first item in the stream.
+    **/
     first: function(){
       return this.get(0);
     },
 
     /**
-     * stream.Stream#last() -> value | promise.Promise
-     *
-     * Returns the last item in the stream.
-     **/
+    * stream.Stream#last() -> value | promise.Promise
+    *
+    * Returns the last item in the stream.
+    **/
     last: Exhaustive(function(){
       if(typeof this._producer.last === "function"){
         return this._producer.last();
@@ -160,12 +160,12 @@ define([
     }),
 
     /**
-     * stream.Stream#concat(args) -> stream.Stream
-     *
-     * Concatenate arrays, [[stream.Producer producers]] and
-     * [[stream.Stream streams]] with the current stream, returning a new
-     * stream.
-     **/
+    * stream.Stream#concat(args) -> stream.Stream
+    *
+    * Concatenate arrays, [[stream.Producer producers]] and
+    * [[stream.Stream streams]] with the current stream, returning a new
+    * stream.
+    **/
     concat: Exhaustive(function(){
       var producers = [this._producer];
       for(var i = 0; i < arguments.length; i++){
@@ -205,15 +205,15 @@ define([
     }),
 
     /**
-     * stream.Stream#filter(filterFunc, thisObject) -> stream.Stream
-     * - filterFunc (Function): function(value, index, stream){ … }
-     * - thisObject (?)
-     *
-     * Create a new, filtered stream.
-     *
-     * Follows array semantics, so `filterFunc()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#filter(filterFunc, thisObject) -> stream.Stream
+    * - filterFunc (Function): function(value, index, stream){ … }
+    * - thisObject (?)
+    *
+    * Create a new, filtered stream.
+    *
+    * Follows array semantics, so `filterFunc()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     filter: Exhaustive(function(filterFunc, thisObject){
       var consumeStream = lang.bind(this._producer.consume, this._producer);
       var stream = this;
@@ -244,15 +244,15 @@ define([
     }),
 
     /**
-     * stream.Stream#map(mapFunc, thisObject) -> stream.Stream
-     * - mapFunc (Function): function(value, index, stream){ … }
-     * - thisObject (?)
-     *
-     * Create a new, mapped stream.
-     *
-     * Follows array semantics, so `mapFunc()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#map(mapFunc, thisObject) -> stream.Stream
+    * - mapFunc (Function): function(value, index, stream){ … }
+    * - thisObject (?)
+    *
+    * Create a new, mapped stream.
+    *
+    * Follows array semantics, so `mapFunc()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     map: Exhaustive(function(mapFunc, thisObject){
       var consumeStream = lang.bind(this._producer.consume, this._producer);
       var stream = this;
@@ -281,15 +281,15 @@ define([
     }),
 
     /**
-     * stream.Stream#forEach(callback, thisObject) -> promise.Promise
-     * - callback (Function): function(value, index, stream){ … }
-     * - thisObject (?)
-     *
-     * Iterate over the stream.
-     *
-     * Follows array semantics, so `callback()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#forEach(callback, thisObject) -> promise.Promise
+    * - callback (Function): function(value, index, stream){ … }
+    * - thisObject (?)
+    *
+    * Iterate over the stream.
+    *
+    * Follows array semantics, so `callback()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     forEach: function(callback, thisObject){
       return this.consume(function(value, index, stream){
         try{
@@ -304,15 +304,15 @@ define([
     },
 
     /**
-     * stream.Stream#some(callback, thisObject) -> promise.Promise
-     * - callback (Function): function(value, index, stream){ … }
-     * - thisObject (?)
-     *
-     * Iterate over the stream until `callback()` returns a truthy value.
-     *
-     * Follows array semantics, so `callback()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#some(callback, thisObject) -> promise.Promise
+    * - callback (Function): function(value, index, stream){ … }
+    * - thisObject (?)
+    *
+    * Iterate over the stream until `callback()` returns a truthy value.
+    *
+    * Follows array semantics, so `callback()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     some: function(callback, thisObject){
       return this.consume(function(value, index, stream){
         try{
@@ -331,15 +331,15 @@ define([
     },
 
     /**
-     * stream.Stream#every(callback, thisObject) -> promise.Promise
-     * - callback (Function): function(value, index, stream){ … }
-     * - thisObject (?)
-     *
-     * Iterate over the stream until `callback()` returns a falsy value.
-     *
-     * Follows array semantics, so `callback()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#every(callback, thisObject) -> promise.Promise
+    * - callback (Function): function(value, index, stream){ … }
+    * - thisObject (?)
+    *
+    * Iterate over the stream until `callback()` returns a falsy value.
+    *
+    * Follows array semantics, so `callback()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     every: function(callback, thisObject){
       return this.consume(function(value, index, stream){
         try{
@@ -358,15 +358,15 @@ define([
     },
 
     /**
-     * stream.Stream#reduce(callback, initialValue) -> promise.Promise
-     * - callback (Function): function(value, index, stream){ … }
-     * - initialValue (?)
-     *
-     * Reduce the stream.
-     *
-     * Follows array semantics, so `callback()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#reduce(callback, initialValue) -> promise.Promise
+    * - callback (Function): function(value, index, stream){ … }
+    * - initialValue (?)
+    *
+    * Reduce the stream.
+    *
+    * Follows array semantics, so `callback()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     reduce: function(callback, initialValue){
       var previousValue;
       var hasInitialValue = arguments.length > 1;
@@ -386,15 +386,15 @@ define([
     },
 
     /**
-     * stream.Stream#reduceRight(callback, initialValue) -> promise.Promise
-     * - callback (Function): function(value, index, stream){ … }
-     * - initialValue (?)
-     *
-     * Right-reduce the stream.
-     *
-     * Follows array semantics, so `callback()` cannot provide backpressure
-     * or throw [[stream.StopConsumption]].
-     **/
+    * stream.Stream#reduceRight(callback, initialValue) -> promise.Promise
+    * - callback (Function): function(value, index, stream){ … }
+    * - initialValue (?)
+    *
+    * Right-reduce the stream.
+    *
+    * Follows array semantics, so `callback()` cannot provide backpressure
+    * or throw [[stream.StopConsumption]].
+    **/
     reduceRight: function(callback, initialValue){
       var previousValue;
       var hasInitialValue = arguments.length > 1;
@@ -426,11 +426,11 @@ define([
     },
 
     /**
-     * stream.Stream#join(separator) -> String | promise.Promise
-     * - separator (String)
-     *
-     * Join each item of the stream into a string.
-     **/
+    * stream.Stream#join(separator) -> String | promise.Promise
+    * - separator (String)
+    *
+    * Join each item of the stream into a string.
+    **/
     join: function(separator){
       return asap(this.toArray(), function(array){
         return array.join(separator);
@@ -438,11 +438,11 @@ define([
     },
 
     /**
-     * stream.Stream#toSortedArray(compareFunction) -> Array | promise.Promise
-     * - compareFunction (Function)
-     *
-     * Sort the items of the stream into an array.
-     **/
+    * stream.Stream#toSortedArray(compareFunction) -> Array | promise.Promise
+    * - compareFunction (Function)
+    *
+    * Sort the items of the stream into an array.
+    **/
     toSortedArray: function(compareFunction){
       return asap(this.toArray(), function(array){
         try{
@@ -454,10 +454,10 @@ define([
     },
 
     /**
-     * stream.Stream#toReversedArray() -> Array | promise.Promise
-     *
-     * Revert the items of the stream into an array.
-     **/
+    * stream.Stream#toReversedArray() -> Array | promise.Promise
+    *
+    * Revert the items of the stream into an array.
+    **/
     toReversedArray: function(){
       return asap(this.toArray(), function(array){
         return array.reverse();
@@ -465,12 +465,12 @@ define([
     },
 
     /**
-     * stream.Stream#indexOf(searchElement[, fromIndex]) -> Number | promise.Promise
-     * - searchElement (?)
-     * - fromIndex (Number)
-     *
-     * Try to find the `searchElement` in the stream.
-     **/
+    * stream.Stream#indexOf(searchElement[, fromIndex]) -> Number | promise.Promise
+    * - searchElement (?)
+    * - fromIndex (Number)
+    *
+    * Try to find the `searchElement` in the stream.
+    **/
     indexOf: Exhaustive(function(searchElement, fromIndex){
       fromIndex = Number(fromIndex) || 0;
 
@@ -482,12 +482,12 @@ define([
     }),
 
     /**
-     * stream.Stream#lastIndexOf(searchElement[, fromIndex]) -> Number | promise.Promise
-     * - searchElement (?)
-     * - fromIndex (Number)
-     *
-     * Try to find the `searchElement` in the stream.
-     **/
+    * stream.Stream#lastIndexOf(searchElement[, fromIndex]) -> Number | promise.Promise
+    * - searchElement (?)
+    * - fromIndex (Number)
+    *
+    * Try to find the `searchElement` in the stream.
+    **/
     lastIndexOf: Exhaustive(function(searchElement, fromIndex){
       fromIndex = Number(fromIndex);
       if(fromIndex !== 0 && !fromIndex){
@@ -502,11 +502,11 @@ define([
     }),
 
     /**
-     * stream.Stream#parseJSON() -> promise.Promise
-     *
-     * Joins the stream into a string and then applies `JSON.parse`. Always
-     * returns a promise so parse errors can be handled more gracefully.
-     **/
+    * stream.Stream#parseJSON() -> promise.Promise
+    *
+    * Joins the stream into a string and then applies `JSON.parse`. Always
+    * returns a promise so parse errors can be handled more gracefully.
+    **/
     parseJSON: function(){
       return later(this.join(""), lang.parseJSON);
     }

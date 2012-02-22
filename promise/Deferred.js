@@ -1,15 +1,15 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
 /**
- * class promise.Deferred
- *
- * Deferred base class.
- **/
+* class promise.Deferred
+*
+* Deferred base class.
+**/
 define([
   "compose",
   "../lib/adapters!lang",
   "../lib/adapters!timers",
-  "../promise",
+  "./_errors",
   "./Promise",
   "./isPromise",
   "./timeout"
@@ -21,11 +21,11 @@ define([
       REJECTED = 2;
   var FULFILLED_ERROR_MESSAGE = "This deferred has already been fulfilled.";
 
- /**
-   * new promise.Deferred([canceler])
-   * - canceler (Function): Function to be invoked when the deferred is canceled. The canceler receives the reason the deferred was canceled as its argument. The deferred is rejected with its return value, if any.
-   *
-   **/
+  /**
+  * new promise.Deferred([canceler])
+  * - canceler (Function): Function to be invoked when the deferred is canceled. The canceler receives the reason the deferred was canceled as its argument. The deferred is rejected with its return value, if any.
+  *
+  **/
   var Deferred = Compose(function(canceler){
     var promise = this.promise = new Promise;
     var fulfilled, result;
@@ -33,48 +33,48 @@ define([
     var waiting = [];
 
     /**
-     * promise.Deferred#isResolved() -> Boolean
-     *
-     * Checks whether the deferred has been resolved.
-     **/
+    * promise.Deferred#isResolved() -> Boolean
+    *
+    * Checks whether the deferred has been resolved.
+    **/
     this.isResolved = promise.isResolved = function(){
       return fulfilled === RESOLVED;
     };
 
     /**
-     * promise.Deferred#isRejected() -> Boolean
-     *
-     * Checks whether the deferred has been rejected.
-     **/
+    * promise.Deferred#isRejected() -> Boolean
+    *
+    * Checks whether the deferred has been rejected.
+    **/
     this.isRejected = promise.isRejected = function(){
       return fulfilled === REJECTED;
     };
 
     /**
-     * promise.Deferred#isFulfilled() -> Boolean
-     *
-     * Checks whether the deferred has been resolved or rejected.
-     **/
+    * promise.Deferred#isFulfilled() -> Boolean
+    *
+    * Checks whether the deferred has been resolved or rejected.
+    **/
     this.isFulfilled = promise.isFulfilled = function(){
       return !!fulfilled;
     };
 
     /**
-     * promise.Deferred#isCanceled() -> Boolean
-     *
-     * Checks whether the deferred has been canceled.
-     **/
+    * promise.Deferred#isCanceled() -> Boolean
+    *
+    * Checks whether the deferred has been canceled.
+    **/
     this.isCanceled = promise.isCanceled = function(){
       return canceled;
     };
 
     /**
-     * promise.Deferred#progress([update, strict]) -> promise.Promise
-     * - strict (Boolean): if strict, will throw an error if the deferred is fulfilled.
-     *
-     * Emit a progress update on the deferred. Returns the original promise
-     * for the deferred.
-     **/
+    * promise.Deferred#progress([update, strict]) -> promise.Promise
+    * - strict (Boolean): if strict, will throw an error if the deferred is fulfilled.
+    *
+    * Emit a progress update on the deferred. Returns the original promise
+    * for the deferred.
+    **/
     var progress = this.progress = function(update, strict){
       if(!fulfilled){
         signalWaiting(waiting, PROGRESS, update);
@@ -87,22 +87,22 @@ define([
     };
 
     /**
-     * promise.Deferred#progressLater([update]) -> promise.Promise
-     *
-     * Emit a progress update on the deferred on the next tick. Returns the
-     * original promise for the deferred.
-     **/
+    * promise.Deferred#progressLater([update]) -> promise.Promise
+    *
+    * Emit a progress update on the deferred on the next tick. Returns the
+    * original promise for the deferred.
+    **/
     this.progressLater = function(update){
       timers.immediate(function(){ progress(update); });
       return promise;
     };
 
     /**
-     * promise.Deferred#resolve([value, strict]) -> promise.Promise
-     * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
-     *
-     * Resolve the deferred. Returns the original promise for the deferred.
-     **/
+    * promise.Deferred#resolve([value, strict]) -> promise.Promise
+    * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
+    *
+    * Resolve the deferred. Returns the original promise for the deferred.
+    **/
     var resolve = this.resolve = function(value, strict){
       if(!fulfilled){
         // Set fulfilled, store value. After signaling waiting listeners unset
@@ -118,22 +118,22 @@ define([
     };
 
     /**
-     * promise.Deferred#resolveLater([value]) -> promise.Promise
-     *
-     * Resolves the deferred on the next tick. Returns the original promise
-     * for the deferred.
-     **/
+    * promise.Deferred#resolveLater([value]) -> promise.Promise
+    *
+    * Resolves the deferred on the next tick. Returns the original promise
+    * for the deferred.
+    **/
     this.resolveLater = function(value){
       timers.immediate(function(){ resolve(value); });
       return promise;
     };
 
     /**
-     * promise.Deferred#reject([error, strict]) -> promise.Promise
-     * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
-     *
-     * Reject the deferred. Returns the original promise for the deferred.
-     **/
+    * promise.Deferred#reject([error, strict]) -> promise.Promise
+    * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
+    *
+    * Reject the deferred. Returns the original promise for the deferred.
+    **/
     var reject = this.reject = function(error, strict){
       if(!fulfilled){
         signalWaiting(waiting, fulfilled = REJECTED, result = error);
@@ -147,25 +147,25 @@ define([
     };
 
     /**
-     * promise.Deferred#rejectLater([error]) -> promise.Promise
-     *
-     * Rejects the deferred on the next tick. Returns the original promise
-     * for the deferred.
-     **/
+    * promise.Deferred#rejectLater([error]) -> promise.Promise
+    *
+    * Rejects the deferred on the next tick. Returns the original promise
+    * for the deferred.
+    **/
     this.rejectLater = function(error){
       timers.immediate(function(){ reject(error); });
       return promise;
     };
 
     /**
-     * promise.Deferred#then([callback, errback, progback]) -> promise.Promise
-     * - callback (Function): Callback to be invoked when the promise is resolved
-     * - errback (Function): Callback to be invoked when the promise is rejected
-     * - progback (Function): Callback to be invoked when the promise emits a progress update
-     *
-     * Add new callbacks to the deferred. Returns a new promise for the result
-     * of the callback(s).
-     **/
+    * promise.Deferred#then([callback, errback, progback]) -> promise.Promise
+    * - callback (Function): Callback to be invoked when the promise is resolved
+    * - errback (Function): Callback to be invoked when the promise is rejected
+    * - progback (Function): Callback to be invoked when the promise emits a progress update
+    *
+    * Add new callbacks to the deferred. Returns a new promise for the result
+    * of the callback(s).
+    **/
     this.then = promise.then = function(callback, errback, progback){
       var listener = [progback, callback, errback];
       // Ensure we cancel the promise we're waiting for, or if callback/errback
@@ -185,16 +185,16 @@ define([
     };
 
     /**
-     * promise.Deferred#cancel([reason, strict]) -> Boolean | reason
-     * - reason (?): A message that may be sent to the deferred's canceler, explaining why it's being canceled.
-     * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
-     *
-     * Signal the deferred that we're no longer interested in the result.
-     * The deferred may subsequently cancel its operation and reject the
-     * promise. Can affect other promises that originate with the same
-     * deferred. Returns the rejection reason if the deferred was canceled
-     * normally.
-     **/
+    * promise.Deferred#cancel([reason, strict]) -> Boolean | reason
+    * - reason (?): A message that may be sent to the deferred's canceler, explaining why it's being canceled.
+    * - strict (Boolean): if strict, will throw an error if the deferred has already been fulfilled.
+    *
+    * Signal the deferred that we're no longer interested in the result.
+    * The deferred may subsequently cancel its operation and reject the
+    * promise. Can affect other promises that originate with the same
+    * deferred. Returns the rejection reason if the deferred was canceled
+    * normally.
+    **/
     this.cancel = promise.cancel = function(reason, strict){
       // Cancel can be called even after the deferred is fulfilled
       if(!fulfilled){
@@ -222,31 +222,31 @@ define([
     lang.freezeObject(promise);
   }, {
     /**
-     * promise.Deferred#timeout(ms = 0) -> promise.Promise
-     * - ms (Number): How long to wait until the promise is cancelled.
-     *
-     * Cancels the deferred if it is not fulfilled within the specified time.
-     * Returns the promise for the deferred.
-     **/
+    * promise.Deferred#timeout(ms = 0) -> promise.Promise
+    * - ms (Number): How long to wait until the promise is cancelled.
+    *
+    * Cancels the deferred if it is not fulfilled within the specified time.
+    * Returns the promise for the deferred.
+    **/
     timeout: function(ms){
       return timeout(this.promise, ms);
     },
 
     /**
-     * promise.Deferred#resolverCallback(callback) -> Function
-     * - callback (Function)
-     *
-     * Creates a new function that will invoke the specified callback and use
-     * its return value to resolve the deferred. Automatically catches errors
-     * and rejects the deferred instead.
-     * 
-     * ## Example
-     *
-     *     setTimeout(deferred.resolverCallback(function(){
-     *       return doSomething();
-     *     }), 100);
-     *
-     **/
+    * promise.Deferred#resolverCallback(callback) -> Function
+    * - callback (Function)
+    *
+    * Creates a new function that will invoke the specified callback and use
+    * its return value to resolve the deferred. Automatically catches errors
+    * and rejects the deferred instead.
+    * 
+    * ## Example
+    *
+    *     setTimeout(deferred.resolverCallback(function(){
+    *       return doSomething();
+    *     }), 100);
+    *
+    **/
     resolverCallback: function(callback){
       var deferred = this;
       return function(){
