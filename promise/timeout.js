@@ -1,6 +1,10 @@
 if (typeof define !== 'function') { var define = (require('amdefine'))(module); }
 
-define(["../promise"], function(errors){
+define([
+  "../promise",
+  "../promise/asap",
+  "../lib/adapters!timers"
+], function(errors, asap, timers){
   "use strict";
 
   /**
@@ -13,9 +17,13 @@ define(["../promise"], function(errors){
    * promise value for chaining.
    **/
   return function timeout(promiseLike, ms){
-    setTimeout(function(){
-      promiseLike.cancel && promiseLike.cancel(new errors.TimeoutError);
-    }, ms || 0);
+    if(promiseLike.cancel){
+      var id = timers.set(function(){
+        promiseLike.cancel(new errors.TimeoutError);
+      }, ms || 0);
+      var clear = function(){ timers.clear(id); };
+      asap(promiseLike, clear, clear);
+    }
     return promiseLike;
   };
 });
