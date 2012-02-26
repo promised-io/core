@@ -261,6 +261,26 @@ define([
       return this.then(function(func){
         return func.apply(thisObject, args);
       });
+    },
+
+    /**
+    * promise.Promise#trace([arg1, arg2, arg3]) -> promise.Promise
+    * - arg1 (?): Subsequent arguments are passed to the tracer.
+    *
+    * [[promise.tracer Traces]] the promise. Returns the original promise.
+    **/
+    trace: function(){
+      return this;
+    },
+
+    /**
+    * promise.Promise#traceRejected([arg1, arg2, arg3]) -> promise.Promise
+    * - arg1 (?): Subsequent arguments are passed to the tracer.
+    *
+    * [[promise.tracer Traces]] rejection of the promise. Returns the original promise.
+    **/
+    traceRejected: function(){
+      return this;
     }
   });
 });

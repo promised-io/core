@@ -270,6 +270,20 @@ define([
         });
         this.deferred.resolve();
       }
+    },
+
+    "trace()": {
+      "returns the same promise": function(){
+        var promise = this.deferred.promise.trace();
+        assert.same(promise, this.deferred.promise);
+      }
+    },
+
+    "traceRejected()": {
+      "returns the same promise": function(){
+        var promise = this.deferred.promise.traceRejected();
+        assert.same(promise, this.deferred.promise);
+      }
     }
   });
 });
