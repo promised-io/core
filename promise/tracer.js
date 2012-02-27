@@ -18,16 +18,16 @@ define([
   Promise.prototype.trace = function(){
     var args = slice.call(arguments);
     this.then(
-      function(value){ emitter.emit.apply(emitter, ["resolved", value].concat(args)); },
-      function(error){ emitter.emit.apply(emitter, ["rejected", error].concat(args)); },
-      function(update){ emitter.emit.apply(emitter, ["progress", update].concat(args)); }
+      function(value){ emitter.emitAsync.apply(emitter, ["resolved", value].concat(args)); },
+      function(error){ emitter.emitAsync.apply(emitter, ["rejected", error].concat(args)); },
+      function(update){ emitter.emitAsync.apply(emitter, ["progress", update].concat(args)); }
     );
     return this;
   };
 
   Promise.prototype.traceRejected = function(){
     var args = slice.call(arguments);
-    this.fail(function(error){ emitter.emit.apply(emitter, ["rejected", error].concat(args)); });
+    this.fail(function(error){ emitter.emitAsync.apply(emitter, ["rejected", error].concat(args)); });
     return this;
   };
 

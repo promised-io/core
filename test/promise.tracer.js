@@ -20,39 +20,43 @@ define([
     },
 
     "trace": {
-      "resolved": function(){
+      "resolved": function(done){
         var obj = {};
         this.handles.push(tracer.on("resolved", function(value){
           assert.same(value, obj);
+          done();
         }));
         this.deferred.promise.trace();
         this.deferred.resolve(obj);
       },
 
-      "rejected": function(){
+      "rejected": function(done){
         var obj = {};
         this.handles.push(tracer.on("rejected", function(error){
           assert.same(error, obj);
+          done();
         }));
         this.deferred.promise.trace();
         this.deferred.reject(obj);
       },
 
-      "progress": function(){
+      "progress": function(done){
         var obj = {};
         this.handles.push(tracer.on("progress", function(update){
           assert.same(update, obj);
+          done();
         }));
         this.deferred.promise.trace();
         this.deferred.progress(obj);
       },
 
-      "passing extra arguments": function(){
+      "passing extra arguments": function(done){
         var obj = {};
         this.handles.push(tracer.on("resolved", function(value, arg1, arg2){
           assert.same(value, obj);
           assert.same(arg1, "test");
           assert.same(arg2, obj);
+          done();
         }));
         this.deferred.promise.trace("test", obj);
         this.deferred.resolve(obj);
@@ -60,21 +64,23 @@ define([
     },
 
     "traceRejected": {
-      "rejected": function(){
+      "rejected": function(done){
         var obj = {};
         this.handles.push(tracer.on("rejected", function(error){
           assert.same(error, obj);
+          done();
         }));
         this.deferred.promise.traceRejected();
         this.deferred.reject(obj);
       },
 
-      "passing extra arguments": function(){
+      "passing extra arguments": function(done){
         var obj = {};
         this.handles.push(tracer.on("rejected", function(error, arg1, arg2){
           assert.same(error, obj);
           assert.same(arg1, "test");
           assert.same(arg2, obj);
+          done();
         }));
         this.deferred.promise.traceRejected("test", obj);
         this.deferred.reject(obj);
