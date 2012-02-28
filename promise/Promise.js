@@ -134,7 +134,7 @@ define([
     /**
     * promise.Promise#invoke(name[, args]) -> promise.Promise
     * - name (String | Number): Name of method to invoke
-    * - args (Array): Subsequent arguments are passed to the method.
+    * - args (?): Subsequent arguments are passed to the method.
     *
     * Invokes a method on the fulfilled promise value. Returns a promise
     * for the return value.
@@ -147,7 +147,8 @@ define([
     *     // Logs 42
     *
     **/
-    invoke: function(name, args){
+    invoke: function(name){
+      var args = slice.call(arguments, 1);
       return this.then(function(result){
         return result[name].apply(result, args);
       });

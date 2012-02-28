@@ -117,7 +117,7 @@ define([
 
       "passing arguments": function(){
         var obj = {};
-        this.deferred.promise.invoke("foo", [obj]);
+        this.deferred.promise.invoke("foo", obj);
         this.deferred.resolve({
           foo: function(arg){
             assert.same(arg, obj);
