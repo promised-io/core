@@ -155,25 +155,26 @@ define([
     },
 
     /**
-    * promise.Promise#put(name, value) -> promise.Promise
+    * promise.Promise#set(name, value) -> promise.Promise
     * - name (String | Number): Name of property to set
     * - value (?): New value of property
     *
     * Sets the value of a property on the fulfilled promise value. Returns a
-    * promise for the property value.
+    * promise for the original value.
     *
     * ## Example
     *
     *     var deferred = defer();
-    *     deferred.promise.put("foo", 42);
+    *     deferred.promise.set("foo", 42);
     *     var obj = {};
     *     deferred.resolve(obj);
     *     // obj.foo === 42
     *
     **/
-    put: function(name, value){
+    set: function(name, value){
       return this.then(function(result){
-        return result[name] = value;
+        result[name] = value;
+        return result;
       });
     },
 
@@ -182,7 +183,7 @@ define([
     * - name (String): Name of property to delete
     *
     * Delete the value of a property on the fulfilled promise value. Returns
-    * a promise for the delete operation.
+    * a promise for the original value.
     *
     * ## Example
     *
@@ -194,7 +195,8 @@ define([
     **/
     del: function(name){
       return this.then(function(result){
-        return delete result[name];
+        delete result[name];
+        return result;
       });
     },
 

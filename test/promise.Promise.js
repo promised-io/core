@@ -126,25 +126,25 @@ define([
       }
     },
 
-    "put()": {
+    "set()": {
       "with result": function(){
         var obj = {};
-        this.deferred.promise.put("foo", "bar").then(function(result){
-          assert.same(result, "bar");
-          assert.same(obj.foo, "bar");
+        this.deferred.promise.set("foo", "bar").then(function(result){
+          assert.same(result.foo, "bar");
+          assert.same(result, obj);
         });
         this.deferred.resolve(obj);
       },
 
       "with undefined result": function(){
-        this.deferred.promise.put("foo", "bar").then(null, function(result){
+        this.deferred.promise.set("foo", "bar").then(null, function(result){
           assert.same(result.name, "TypeError");
         });
         this.deferred.resolve();
       },
 
       "with null result": function(){
-        this.deferred.promise.put("foo", "bar").then(null, function(result){
+        this.deferred.promise.set("foo", "bar").then(null, function(result){
           assert.same(result.name, "TypeError");
         });
         this.deferred.resolve(null);
@@ -183,7 +183,7 @@ define([
       "with result": function(){
         var obj = { foo: "bar" };
         this.deferred.promise.del("foo").then(function(result){
-          assert(result);
+          assert.same(result, obj);
           refute.defined(obj.foo);
         });
         this.deferred.resolve(obj);
