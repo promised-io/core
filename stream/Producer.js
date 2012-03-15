@@ -45,6 +45,14 @@ define([
     consume: Compose.required,
 
     /**
+    * stream.Producer#destroy()
+    *
+    * Destroy the producer, should be used if the producer won't be consumed.
+    * Behavior when invoked during consumption is undefined. Producers are not
+    * required to provide this method. May throw errors.
+    **/
+
+    /**
     * stream.Producer#isRepeatable -> Boolean
     *
     * Flag indicating the producer is repeatable. Tested for by streams etc.

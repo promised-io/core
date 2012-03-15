@@ -78,6 +78,22 @@ define([
     }),
 
     /**
+    * stream.Stream#destroy()
+    *
+    * Destroy the underlying producer and exhausts the stream, even if the
+    * stream is repeatable. Side-effects are undefined.
+    **/
+    destroy: function(){
+      if(this._exhausted){
+        throw new errors.ExhaustionError;
+      }
+      this._exhausted = true;
+      if(typeof this._producer.destroy === "function"){
+        this._producer.destroy();
+      }
+    },
+
+    /**
     * stream.Stream#toArray() -> Array | promise.Promise
     *
     * Returns a regular array for the stream.

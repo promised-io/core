@@ -186,6 +186,19 @@ define([
         }
       },
 
+      "destroy": {
+        "is exhaustive": function(){
+          try{
+            instance.destroy();
+          }catch(e){
+            // destroy() may throw errors, but we don't care about those in this test.
+          };
+          assert.exception(function(){
+            instance.consume(lang.noop);
+          }, errors.ExhaustionError);
+        }
+      },
+
       "toArray": shared.tests.toArray,
       "length": shared.tests.length,
       "get": shared.tests.get,
