@@ -330,7 +330,8 @@ define([
             return index === 1;
           });
           timers.immediate(function(){
-            assert.same(consumed, 0);
+            // Due to data buffering up to 1 item may have been consumed.
+            assert(consumed <= 1);
             filtered.consume(lang.noop).then(assert).then(function(){
               done();
             });
@@ -485,7 +486,8 @@ define([
           produce();
           var mapped = instance.map(lang.noop);
           timers.immediate(function(){
-            assert.same(consumed, 0);
+            // Due to data buffering up to 1 item may have been consumed.
+            assert(consumed <= 1);
             mapped.consume(lang.noop).then(assert).then(function(){
               done();
             });
