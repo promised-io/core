@@ -1112,6 +1112,28 @@ define([
         }
       },
 
+      "parseForm": {
+        beforeEach: function(){
+          values.splice(0, 3, 'foo=', 'bar&ba', 'z=thud');
+        },
+
+        "returns promise": function(){
+          finish();
+          var promise = instance.parseForm();
+          assert(isPromise(promise));
+          refute(promise.isFulfilled());
+          return promise;
+        },
+
+        "parses": function(){
+          finish();
+          return instance.parseForm().then(function(json){
+            assert.same(json.foo, "bar");
+            assert.same(json.baz, "thud");
+          });
+        }
+      },
+
       "isRepeatable": {
         "returns expected value": function(){
           assert.same(instance.isRepeatable(), repeatable);

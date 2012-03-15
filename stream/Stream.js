@@ -525,6 +525,17 @@ define([
     **/
     parseJSON: function(){
       return later(this.join(""), lang.parseJSON);
+    },
+
+    /**
+    * stream.Stream#parseForm() -> promise.Promise
+    *
+    * Joins the stream into a string and then parses it as if it were
+    * form-urlencoded. Always returns a promise so parse errors can be handled
+    * more gracefully.
+    **/
+    parseForm: function(){
+      return later(this.join(""), lang.parseForm);
     }
   });
 
