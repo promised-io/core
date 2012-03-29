@@ -407,6 +407,20 @@ define([
         this.deferred.then(function(result){
           assert.same(result, obj);
         });
+        assert(this.deferred.isCanceled());
+      },
+
+      "with canceler resolving deferred, chained": function(){
+        var deferred = this.deferred;
+        var obj = {};
+        this.canceler = function(){ deferred.resolve(obj); };
+        var last = this.deferred.then().then().then();
+        last.cancel();
+        last.then(function(result){
+          assert.same(result, obj);
+        });
+        assert(this.deferred.isCanceled());
+        assert(last.isCanceled());
       },
 
       "with canceler resolving deferred, returns undefined": function(){
@@ -425,6 +439,20 @@ define([
         this.deferred.then(null, function(result){
           assert.same(result, obj);
         });
+        assert(this.deferred.isCanceled());
+      },
+
+      "with canceler rejecting deferred, chained": function(){
+        var deferred = this.deferred;
+        var obj = {};
+        this.canceler = function(){ deferred.reject(obj); };
+        var last = this.deferred.then().then().then();
+        last.cancel();
+        last.then(null, function(result){
+          assert.same(result, obj);
+        });
+        assert(this.deferred.isCanceled());
+        assert(last.isCanceled());
       },
 
       "with canceler rejecting deferred, returns undefined": function(){

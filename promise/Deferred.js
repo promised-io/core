@@ -198,11 +198,11 @@ define([
     this.cancel = promise.cancel = function(reason, strict){
       // Cancel can be called even after the deferred is fulfilled
       if(!fulfilled){
-        canceled = true;
         if(canceler){
           var returnedReason = canceler(reason);
           reason = typeof returnedReason === "undefined" ? reason : returnedReason;
         }
+        canceled = true;
         if(!fulfilled){
           // Allow canceler to provide its own reason, but fall back to a CancelError
           if(typeof reason === "undefined"){
