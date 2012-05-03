@@ -74,7 +74,7 @@ define([
       if("json" in options && typeof options.json === "undefined"){
         throw new TypeError("Illegal body, json can't be undefined");
       }
-      if("body" in options && (!options.body || typeof options.body.pipe !== "function" || typeof options.body.forEach !== "function" || typeof options.body.join !== "function")){
+      if("body" in options && (!options.body || typeof options.body.pipe !== "function" && typeof options.body.forEach !== "function" && typeof options.body.join !== "function")){
         throw new TypeError("Illegal body, expected pipe, forEach or join method");
       }
     }
