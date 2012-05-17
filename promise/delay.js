@@ -17,13 +17,22 @@ define([
   return function delay(ms){
     var clearId;
     var deferred = defer(function(){
-      clearId && timers.clear(clearId);
+      if(clearId){
+        timers.clear(clearId);
+      }
     });
 
     if(arguments.length === 0){
       timers.immediate(deferred.resolve);
     }else{
-      clearId = timers.set(deferred.resolve, ms);
+      var start = new Date().getTime();
+      clearId = timers.set(function(){
+        var passed = new Date().getTime() - start;
+        if(passed < ms){
+          return delay(ms - passed).then(deferred.resolve);
+        }
+        deferred.resolve();
+      }, ms);
     }
 
     return deferred.promise;
