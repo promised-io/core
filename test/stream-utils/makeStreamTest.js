@@ -19,7 +19,7 @@ define([
   "use strict";
 
   return function(name, klass, repeatable, init){
-    var instance, produce, finish, consumed, values;
+    var instance, produce, produceError, finish, consumed, values;
     var shared = new Shared;
 
     return testCase(name, {
@@ -29,7 +29,7 @@ define([
 
         var source = new Source(function(){
           consumed++;
-          shared.update(instance, produce, finish, consumed, values);
+          shared.update(instance, produce, produceError, finish, consumed, values);
         });
         var result = init(values, source);
         instance = result.instance;
@@ -40,6 +40,9 @@ define([
             if(index < values.length){
               source.produce(values[index++]);
             }
+          };
+          produceError = function(){
+            source.produce(new Error("Produced error"));
           };
           finish = function(){
             while(index < values.length){
@@ -53,7 +56,7 @@ define([
           consumed = values.length;
         }
 
-        shared.update(instance, produce, finish, consumed, values);
+        shared.update(instance, produce, produceError, finish, consumed, values);
       },
 
       "consume": {

@@ -13,12 +13,13 @@ define([
   "use strict";
 
   return function(){
-    var instance, produce, finish, consumed, values;
+    var instance, produce, produceError, finish, consumed, values;
 
     return {
-      update: function(_instance, _produce, _finish, _consumed, _values){
+      update: function(_instance, _produce, _produceError, _finish, _consumed, _values){
         instance = _instance;
         produce = _produce;
+        produceError = _produceError;
         finish = _finish;
         consumed = _consumed;
         values = _values;

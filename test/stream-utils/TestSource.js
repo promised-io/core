@@ -54,6 +54,10 @@ define([
       var index = this._index;
       var value = this._buffer[this._index++];
 
+      if(value instanceof Error){
+        this._deferred.reject(value);
+      }
+
       try{
         var backpressure = this._callback.call(lang.undefinedThis, value, index);
         this._onConsumption(null, backpressure);

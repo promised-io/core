@@ -17,7 +17,7 @@ define([
   "use strict";
 
   return function(name, klass, init){
-    var instance, produce, finish, consumed, values;
+    var instance, produce, produceError, finish, consumed, values;
     var shared = new Shared;
 
     return testCase(name, {
@@ -27,7 +27,7 @@ define([
 
         var source = new Source(function(){
           consumed++;
-          shared.update(instance, produce, finish, consumed, values);
+          shared.update(instance, produce, produceError, finish, consumed, values);
         });
         var result = init(values, source);
         instance = result.instance;
@@ -39,6 +39,9 @@ define([
               source.produce(values[index++]);
             }
           };
+          produceError = function(){
+            source.produce(new Error("Produced error"));
+          };
           finish = function(){
             while(index < values.length){
               produce();
@@ -47,11 +50,11 @@ define([
           };
         }else{
           // Else we assume the returned producer has bufferred all values
-          produce = finish = lang.noop;
+          produce = produceError = finish = lang.noop;
           consumed = values.length;
         }
 
-        shared.update(instance, produce, finish, consumed, values);
+        shared.update(instance, produce, produceError, finish, consumed, values);
       },
 
       "consume": {
@@ -87,6 +90,22 @@ define([
             }
           }).then(assert).then(function(){
             assert.same(lastIndex, values.length - 1);
+          });
+        },
+
+        "handle source errors": function(){
+          var promise = instance.consume(lang.noop);
+
+          produceError();
+
+          refute(promise.isFulfilled());
+          return promise.then(function(ok){
+            // Producers that have already consumed all values can't receive
+            // source errors, e.g. ArrayProducer.
+            assert.same(consumed, values.length);
+            assert(ok);
+          }, function(error){
+            assert(error.message === "Produced error");
           });
         },
 
@@ -276,7 +295,7 @@ define([
         !klass.prototype.isRepeatable
         ? {
           "throws exhaustion error": function(){
-            instance.consume(function(){});
+            instance.consume(lang.noop);
             assert.exception(function(){
               instance.consume(function(){});
             }, "ExhaustionError");
@@ -333,6 +352,24 @@ define([
               });
             });
           },
+
+          "handle source errors": function(){
+              var promiseA = instance.consume(lang.noop);
+
+              produceError();
+
+              refute(promiseA.isFulfilled());
+              return promiseA.both(function(){
+                return instance.consume(lang.noop).then(function(ok){
+                  // Producers that have already consumed all values can't receive
+                  // source errors, e.g. ArrayProducer.
+                  assert.same(consumed, values.length);
+                  assert(ok);
+                }, function(error){
+                  assert(error.message === "Produced error");
+                });
+              });
+            },
 
           "with async production": function(){
             var lastIndexA = -1, lastIndexB = -1;

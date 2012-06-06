@@ -104,6 +104,8 @@ define([
   }, {
     _consuming: false,
     _finished: false,
+    _hasError: false,
+    _error: null,
 
     isRepeatable: true,
 
@@ -250,6 +252,11 @@ define([
     _resumeFromCache: function(consumer){
       consumer.resume();
 
+      if(this._hasError){
+        consumer.reject(this._error);
+        return;
+      }
+
       var cacheSize = this._values.length;
       var index = consumer.resumeAt;
       for(; index < cacheSize && consumer.isActive(); index++){
@@ -303,6 +310,8 @@ define([
 
     _finish: function(error, ok){
       this._finished = true;
+      this._hasError = !ok;
+      this._error = error;
 
       lang.forEach(this._activeConsumers, function(consumer){
         if(consumer.isActive()){
