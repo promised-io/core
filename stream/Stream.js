@@ -291,8 +291,11 @@ define([
             }
             return callback(value, index++);
           });
-        })
+        }),
       });
+      if(typeof this._producer.length === "function"){
+        mappedProducer.length = lang.bind(this._producer.length, this._producer);
+      }
       return new this.constructor(mappedProducer);
     }),
 
